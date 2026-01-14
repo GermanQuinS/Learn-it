@@ -20,13 +20,11 @@
             --shadow-dark: rgba(0, 0, 0, 0.3);
             --shadow-light: rgba(0, 0, 0, 0.1);
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
@@ -34,45 +32,36 @@
             flex-direction: column;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-
         /* ===== TEMA OSCURO (por defecto) ===== */
         body.dark-mode {
             background-color: var(--bg-dark);
             color: var(--text-dark);
         }
-
         body.dark-mode .container {
             background-color: var(--container-dark);
             box-shadow: 0 8px 32px var(--shadow-dark);
         }
-
         body.dark-mode .text-secondary {
             color: var(--text-secondary-dark);
         }
-
         body.dark-mode .admin-link {
             color: var(--text-secondary-dark);
         }
-
         /* ===== TEMA CLARO ===== */
         body.light-mode {
             background-color: var(--bg-light);
             color: var(--text-light);
         }
-
         body.light-mode .container {
             background-color: var(--container-light);
             box-shadow: 0 8px 32px var(--shadow-light);
         }
-
         body.light-mode .text-secondary {
             color: var(--text-secondary-light);
         }
-
         body.light-mode .admin-link {
             color: var(--text-secondary-light);
         }
-
         /* ===== HEADER ===== */
         header {
             padding: 1.5rem 2rem;
@@ -81,29 +70,25 @@
             align-items: flex-start;
             position: relative;
         }
-
         .header-left {
             display: flex;
             align-items: flex-start;
             gap: 1.5rem;
         }
-
         .logo-section h1 {
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 0.3rem;
         }
-
         .logo-section p {
             font-size: 0.9rem;
             opacity: 0.7;
         }
-
         /* Selector de idioma */
         .language-selector {
             position: relative;
+            align-self: flex-start;
         }
-
         .language-btn {
             background: rgba(108, 99, 255, 0.1);
             border: 1px solid rgba(108, 99, 255, 0.2);
@@ -118,12 +103,10 @@
             color: inherit;
             font-weight: 500;
         }
-
         .language-btn:hover {
             background: rgba(108, 99, 255, 0.2);
             border-color: rgba(108, 99, 255, 0.4);
         }
-
         .language-dropdown {
             position: absolute;
             top: calc(100% + 0.5rem);
@@ -139,18 +122,15 @@
             z-index: 100;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
-
         body.light-mode .language-dropdown {
             background: var(--container-light);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
-
         .language-selector:hover .language-dropdown {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
-
         .language-option {
             padding: 0.6rem 0.8rem;
             border-radius: 6px;
@@ -161,336 +141,128 @@
             align-items: center;
             gap: 0.5rem;
         }
-
         .language-option:hover {
             background: rgba(108, 99, 255, 0.15);
         }
-
         .language-option.active {
             background: rgba(108, 99, 255, 0.2);
             font-weight: 600;
         }
-
         /* Bombilla colgante estética */
         .theme-toggle-wrapper {
             position: relative;
             cursor: pointer;
         }
-
         .bulb-wire {
             width: 2px;
             height: 40px;
             background: linear-gradient(to bottom, transparent, currentColor);
-            margin: 0 auto;
-            opacity: 0.3;
-            transition: opacity 0.3s ease;
+            margin: 0 auto; opacity: 0.3; transition: opacity 0.3s ease;
         }
-
         .theme-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 2.5rem;
-            padding: 0.5rem;
-            transition: all 0.4s ease;
-            filter: drop-shadow(0 0 0px transparent);
-            display: block;
+            background: none; border: none; cursor: pointer; font-size: 2.5rem; padding: 0.5rem; transition: all 0.4s ease; filter: drop-shadow(0 0 0px transparent); display: block;
         }
-
         body.dark-mode .theme-toggle {
             filter: drop-shadow(0 0 20px rgba(255, 223, 61, 0.8));
         }
-
         body.light-mode .theme-toggle {
             filter: drop-shadow(0 0 15px rgba(255, 223, 61, 0.6));
         }
-
         .theme-toggle-wrapper:hover .theme-toggle {
             transform: rotate(20deg);
         }
-
         .theme-toggle-wrapper:hover .bulb-wire {
             opacity: 0.6;
         }
-
         /* ===== CONTENEDOR PRINCIPAL ===== */
         main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
+            flex: 1; display: flex; justify-content: center; align-items: center; padding: 2rem;
         }
-
         .login-wrapper {
-            display: flex;
-            align-items: stretch;
-            gap: 0;
-            max-width: 900px;
-            width: 100%;
-            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(78, 205, 196, 0.1));
-            border-radius: 30px;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            position: relative;
+            display: flex; align-items: stretch; gap: 0; max-width: 900px; width: 100%; background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(78, 205, 196, 0.1)); border-radius: 30px; overflow: hidden; backdrop-filter: blur(10px); position: relative;
         }
-
         body.dark-mode .login-wrapper {
-            background: linear-gradient(135deg, rgba(108, 99, 255, 0.15), rgba(78, 205, 196, 0.15));
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 
-                        0 0 80px rgba(108, 99, 255, 0.1);
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.15), rgba(78, 205, 196, 0.15)); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 80px rgba(108, 99, 255, 0.1);
         }
-
         body.light-mode .login-wrapper {
-            background: linear-gradient(135deg, rgba(108, 99, 255, 0.08), rgba(78, 205, 196, 0.08));
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1),
-                        0 0 40px rgba(108, 99, 255, 0.05);
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.08), rgba(78, 205, 196, 0.08)); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), 0 0 40px rgba(108, 99, 255, 0.05);
         }
-
         .container {
-            padding: 4rem 3rem;
-            border-radius: 0;
-            flex: 1;
-            max-width: none;
-            transition: background-color 0.3s ease;
-            background: transparent;
-            position: relative;
+            padding: 4rem 3rem; border-radius: 0; flex: 1; max-width: none; transition: background-color 0.3s ease; background: transparent; position: relative;
         }
-
         /* Separador sutil entre contenido y ilustración */
         .container::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 10%;
-            height: 80%;
-            width: 1px;
-            background: linear-gradient(to bottom, 
-                transparent, 
-                currentColor 20%, 
-                currentColor 80%, 
-                transparent);
-            opacity: 0.1;
+            content: ''; position: absolute; right: 0; top: 10%; height: 80%; width: 1px; background: linear-gradient(to bottom, transparent, currentColor 20%, currentColor 80%, transparent); opacity: 0.1;
         }
-
         .login-content h2 {
-            font-size: 2.2rem;
-            margin-bottom: 2.5rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--accent), #4ecdc4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 2.2rem; margin-bottom: 2.5rem; font-weight: 600; background: linear-gradient(135deg, var(--accent), #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-
         /* ===== BOTONES ===== */
         .button {
-            width: 100%;
-            padding: 1rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 1rem;
+            width: 100%; padding: 1rem; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-bottom: 1rem;
         }
-
         .btn-google {
-            background-color: #ffffff;
-            color: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.8rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff; color: #333; display: flex; align-items: center; justify-content: center; gap: 0.8rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-
         .btn-google:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
-
         .btn-guest {
-            background: linear-gradient(135deg, var(--accent), #5a52d5);
-            color: white;
-            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.3);
+            background: linear-gradient(135deg, var(--accent), #5a52d5); color: white; box-shadow: 0 4px 20px rgba(108, 99, 255, 0.3);
         }
-
         .btn-guest:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(108, 99, 255, 0.5);
+            transform: translateY(-3px); box-shadow: 0 8px 30px rgba(108, 99, 255, 0.5);
         }
-
         .admin-link {
-            display: block;
-            text-align: center;
-            font-size: 0.85rem;
-            margin-top: 1.5rem;
-            text-decoration: none;
-            transition: opacity 0.3s ease;
+            display: block; text-align: center; font-size: 0.85rem; margin-top: 1.5rem; text-decoration: none; transition: opacity 0.3s ease;
         }
-
-        .admin-link:hover {
-            opacity: 0.7;
-        }
-
+        .admin-link:hover { opacity: 0.7; }
         /* ===== ILUSTRACIÓN ===== */
         .illustration {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 3rem 2rem;
-            position: relative;
+            flex: 1; display: flex; justify-content: center; align-items: center; padding: 3rem 2rem; position: relative;
         }
-
         .illustration svg {
-            width: 100%;
-            max-width: 280px;
-            height: auto;
-            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
-            transition: transform 0.3s ease;
+            width: 100%; max-width: 280px; height: auto; filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2)); transition: transform 0.3s ease;
         }
-
-        .illustration:hover svg {
-            transform: translateY(-10px);
-        }
-
+        .illustration:hover svg { transform: translateY(-10px); }
         /* ===== FOOTER ===== */
-        footer {
-            padding: 2rem;
-            text-align: center;
-        }
-
+        footer { padding: 2rem; text-align: center; }
         .description {
-            font-size: 1rem;
-            opacity: 0.8;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
+            font-size: 1rem; opacity: 0.8; max-width: 600px; margin: 0 auto; line-height: 1.6;
         }
-
         /* ===== BOTÓN FLOTANTE DE SOPORTE (ARRASTRABLE) ===== */
         .support-btn {
-            position: fixed;
-            bottom: 6rem;
-            right: 2rem;
-            background-color: var(--accent);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            text-decoration: none;
-            font-weight: 600;
-            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4);
-            transition: box-shadow 0.3s ease, transform 0.1s ease;
-            z-index: 1000;
-            cursor: move;
-            user-select: none;
+            position: fixed; bottom: 6rem; right: 2rem; background-color: var(--accent); color: white; padding: 1rem 1.5rem; border-radius: 50px; display: flex; align-items: center; gap: 0.6rem; text-decoration: none; font-weight: 600; box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4); transition: box-shadow 0.3s ease, transform 0.1s ease; z-index: 1000; cursor: pointer; user-select: none;
         }
-
-        .support-btn:hover {
-            box-shadow: 0 6px 25px rgba(108, 99, 255, 0.6);
-        }
-
-        .support-btn.dragging {
-            cursor: grabbing;
-            transform: scale(1.05);
-            box-shadow: 0 8px 30px rgba(108, 99, 255, 0.7);
-        }
-
+        .support-btn:hover { box-shadow: 0 6px 25px rgba(108, 99, 255, 0.6); }
+        .support-btn.dragging { cursor: grabbing !important; transform: scale(1.05); box-shadow: 0 8px 30px rgba(108, 99, 255, 0.7); }
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            .login-wrapper {
-                flex-direction: column;
-                gap: 0;
-                border-radius: 25px;
-            }
-
-            .container::after {
-                display: none;
-            }
-
-            .illustration {
-                order: -1;
-                padding: 2rem 1rem 1rem 1rem;
-            }
-
-            .illustration svg {
-                max-width: 220px;
-            }
-
-            header {
-                padding: 1rem;
-            }
-
-            .header-left {
-                flex-direction: column;
-                gap: 0.8rem;
-            }
-
-            .logo-section h1 {
-                font-size: 1.5rem;
-            }
-
-            .container {
-                padding: 2rem;
-            }
-
-            .bulb-wire {
-                height: 30px;
-            }
-
-            .theme-toggle {
-                font-size: 2rem;
-            }
-
-            .support-btn {
-                bottom: 5rem;
-                right: 1rem;
-                padding: 0.8rem 1.2rem;
-                font-size: 0.9rem;
-            }
+            .login-wrapper { flex-direction: column; gap: 0; border-radius: 25px; }
+            .container::after { display: none; }
+            .illustration { order: -1; padding: 2rem 1rem 1rem 1rem; }
+            .illustration svg { max-width: 220px; }
+            header { padding: 1rem; }
+            .header-left { flex-direction: column; gap: 0.8rem; }
+            .logo-section h1 { font-size: 1.5rem; }
+            .container { padding: 2rem; }
+            .bulb-wire { height: 30px; }
+            .theme-toggle { font-size: 2rem; }
+            .support-btn { bottom: 5rem; right: 1rem; padding: 0.8rem 1.2rem; font-size: 0.9rem; }
         }
-
         @media (max-width: 480px) {
-            .logo-section h1 {
-                font-size: 1.3rem;
-            }
-
-            .login-content h2 {
-                font-size: 1.8rem;
-            }
-
-            .button {
-                padding: 0.9rem;
-                font-size: 0.95rem;
-            }
-
-            .illustration svg {
-                max-width: 180px;
-            }
-
-            .support-btn span {
-                display: none;
-            }
-
-            .support-btn {
-                padding: 1rem;
-                border-radius: 50%;
-                bottom: 4rem;
-            }
+            .logo-section h1 { font-size: 1.3rem; }
+            .login-content h2 { font-size: 1.8rem; }
+            .button { padding: 0.9rem; font-size: 0.95rem; }
+            .illustration svg { max-width: 180px; }
+            .support-btn span { display: none; }
+            .support-btn { padding: 1rem; border-radius: 50%; bottom: 4rem; }
         }
     </style>
 </head>
 <body class="dark-mode">
-    <!-- HEADER -->
     <header>
         <div class="header-left">
-            <!-- Selector de idioma -->
             <div class="language-selector">
                 <button class="language-btn" id="languageBtn">
                     🌐 <span id="currentLang">EN</span>
@@ -503,7 +275,6 @@
                     <div class="language-option" data-lang="de">🇩🇪 Deutsch</div>
                 </div>
             </div>
-
             <div class="logo-section">
                 <h1>Learn it</h1>
                 <p class="text-secondary" data-translate="subtitle">Your learning platform</p>
@@ -516,16 +287,11 @@
             </button>
         </div>
     </header>
-
-    <!-- MAIN CONTENT -->
     <main>
         <div class="login-wrapper">
-            <!-- Contenedor de login -->
             <div class="container">
                 <div class="login-content">
                     <h2 data-translate="welcome">Welcome</h2>
-                    
-                    <!-- Botón Google -->
                     <button class="button btn-google">
                         <svg width="20" height="20" viewBox="0 0 24 24">
                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -535,61 +301,42 @@
                         </svg>
                         <span data-translate="loginGoogle">Log in with Google</span>
                     </button>
-
-                    <!-- Botón invitado -->
                     <button class="button btn-guest">
                         <span data-translate="continueGuest">Continue as a guest</span>
                     </button>
-
-                    <!-- Link administrador -->
                     <a href="#" class="admin-link" data-translate="adminLogin">Login as administrator</a>
                 </div>
             </div>
-
-            <!-- Ilustración -->
             <div class="illustration">
                 <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Libro 1 (atrás) -->
                     <rect x="80" y="120" width="100" height="140" rx="5" fill="#6c63ff" opacity="0.6"/>
                     <rect x="85" y="125" width="90" height="3" fill="#ffffff" opacity="0.3"/>
                     <rect x="85" y="135" width="70" height="2" fill="#ffffff" opacity="0.3"/>
                     <rect x="85" y="145" width="60" height="2" fill="#ffffff" opacity="0.3"/>
-                    
-                    <!-- Libro 2 (medio) -->
                     <rect x="140" y="100" width="110" height="160" rx="5" fill="#ff6b9d" opacity="0.8"/>
                     <rect x="145" y="105" width="100" height="4" fill="#ffffff" opacity="0.4"/>
                     <rect x="145" y="115" width="80" height="2" fill="#ffffff" opacity="0.4"/>
                     <rect x="145" y="125" width="70" height="2" fill="#ffffff" opacity="0.4"/>
                     <line x1="145" y1="110" x2="145" y2="250" stroke="#ffffff" stroke-width="2" opacity="0.2"/>
-                    
-                    <!-- Libro 3 (adelante) -->
                     <rect x="200" y="130" width="120" height="150" rx="5" fill="#4ecdc4"/>
                     <rect x="205" y="135" width="110" height="5" fill="#ffffff" opacity="0.5"/>
                     <rect x="205" y="145" width="90" height="2" fill="#ffffff" opacity="0.5"/>
                     <rect x="205" y="155" width="80" height="2" fill="#ffffff" opacity="0.5"/>
                     <rect x="205" y="165" width="75" height="2" fill="#ffffff" opacity="0.5"/>
                     <line x1="210" y1="140" x2="210" y2="270" stroke="#ffffff" stroke-width="2" opacity="0.3"/>
-                    
-                    <!-- Detalles decorativos -->
                     <circle cx="100" cy="80" r="5" fill="#ffd93d" opacity="0.6"/>
                     <circle cx="280" cy="90" r="7" fill="#ffd93d" opacity="0.7"/>
                     <circle cx="320" cy="200" r="4" fill="#6c63ff" opacity="0.5"/>
-                    
-                    <!-- Marcador de página -->
                     <rect x="270" y="130" width="8" height="40" fill="#ff6b9d" opacity="0.8"/>
                 </svg>
             </div>
         </div>
     </main>
-
-    <!-- FOOTER -->
     <footer>
         <p class="description" data-translate="description">
             Learn it is a platform that allows you to structure your studies and learning online in a simple way
         </p>
     </footer>
-
-    <!-- BOTÓN FLOTANTE SOPORTE (ARRASTRABLE) -->
     <a href="mailto:support@learnit.com" class="support-btn" id="supportBtn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -599,16 +346,87 @@
     </a>
 
     <script>
-        // ===== GESTIÓN DEL TEMA =====
+        // --- CÓDIGO DE TRADUCCIÓN AÑADIDO ---
+        const translations = {
+            en: {
+                subtitle: "Your learning platform",
+                welcome: "Welcome",
+                loginGoogle: "Log in with Google",
+                continueGuest: "Continue as a guest",
+                adminLogin: "Login as administrator",
+                description: "Learn it is a platform that allows you to structure your studies and learning online in a simple way",
+                support: "Support"
+            },
+            es: {
+                subtitle: "Tu plataforma de aprendizaje",
+                welcome: "Bienvenido",
+                loginGoogle: "Iniciar sesión con Google",
+                continueGuest: "Continuar como invitado",
+                adminLogin: "Iniciar sesión como administrador",
+                description: "Learn it es una plataforma que te permite estructurar tus estudios y aprendizaje online de forma sencilla",
+                support: "Soporte"
+            },
+            gl: {
+                subtitle: "A túa plataforma de aprendizaxe",
+                welcome: "Benvido",
+                loginGoogle: "Acceder con Google",
+                continueGuest: "Continuar como convidado",
+                adminLogin: "Acceder como administrador",
+                description: "Learn it é unha plataforma que che permite estruturar os teus estudos e aprendizaxe en liña de xeito sinxelo",
+                support: "Soporte"
+            },
+            fr: {
+                subtitle: "Votre plateforme d'apprentissage",
+                welcome: "Bienvenue",
+                loginGoogle: "Se connecter avec Google",
+                continueGuest: "Continuer en tant qu'invité",
+                adminLogin: "Connexion administrateur",
+                description: "Learn it est une plateforme qui vous permet de structurer vos études et votre apprentissage en ligne de manière simple",
+                support: "Support"
+            },
+            de: {
+                subtitle: "Ihre Lernplattform",
+                welcome: "Willkommen",
+                loginGoogle: "Mit Google anmelden",
+                continueGuest: "Als Gast fortfahren",
+                adminLogin: "Administrator-Login",
+                description: "Learn it ist eine Plattform, mit der Sie Ihr Studium und Online-Lernen auf einfache Weise strukturieren können",
+                support: "Unterstützung"
+            }
+        };
+
+        const langOptions = document.querySelectorAll('.language-option');
+        const currentLangDisplay = document.getElementById('currentLang');
+
+        langOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const lang = option.getAttribute('data-lang');
+                
+                // Cambiar el texto del botón principal
+                currentLangDisplay.textContent = lang.toUpperCase();
+                
+                // Actualizar clases activas en el menú
+                langOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+
+                // Traducir todos los elementos con [data-translate]
+                document.querySelectorAll('[data-translate]').forEach(el => {
+                    const key = el.getAttribute('data-translate');
+                    if (translations[lang][key]) {
+                        el.textContent = translations[lang][key];
+                    }
+                });
+            });
+        });
+        // --- FIN CÓDIGO DE TRADUCCIÓN ---
+
+        // ===== GESTIÓN DEL TEMA (TU CÓDIGO ORIGINAL) =====
         const themeToggleWrapper = document.getElementById('themeToggleWrapper');
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
-
-        // Cargar tema guardado en localStorage o usar oscuro por defecto
         const savedTheme = localStorage.getItem('theme') || 'dark';
         body.className = `${savedTheme}-mode`;
 
-        // Cambiar tema al hacer click en toda la zona de la bombilla
         themeToggleWrapper.addEventListener('click', () => {
             if (body.classList.contains('dark-mode')) {
                 body.classList.remove('dark-mode');
@@ -621,20 +439,14 @@
             }
         });
 
-        // ===== EVENTOS DE BOTONES (no funcionales, solo feedback visual) =====
         const buttons = document.querySelectorAll('.button');
-        
         buttons.forEach(button => {
             button.addEventListener('click', (e) => {
-                // Efecto visual de click
                 e.target.style.transform = 'scale(0.98)';
-                setTimeout(() => {
-                    e.target.style.transform = '';
-                }, 100);
+                setTimeout(() => { e.target.style.transform = ''; }, 100);
             });
         });
 
-        // Prevenir navegación del link de administrador
         document.querySelector('.admin-link').addEventListener('click', (e) => {
             e.preventDefault();
         });

@@ -451,5 +451,17 @@
             e.preventDefault();
         });
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const guestBtn = document.querySelector('.btn-guest');
+
+        if (guestBtn) {
+            guestBtn.addEventListener('click', () => {
+                localStorage.setItem('userMode', 'guest'); // opcional
+                window.location.href = 'dashboard.html';
+            });
+        }
+    });
+</script>
 </body>
 </html>

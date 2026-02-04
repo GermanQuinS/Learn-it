@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -21,6 +21,34 @@
             --shadow: rgba(0, 0, 0, 0.3);
         }
 
+        /* Light Mode */
+        :root.light-mode {
+            --bg-dark: #f5f7fa;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --accent: #6c63ff;
+            --accent-hover: #5a52d5;
+            --success: #4ecdc4;
+            --warning: #ffd93d;
+            --danger: #ff6b9d;
+            --border: rgba(0, 0, 0, 0.1);
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        :root.light-mode .card {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        :root.light-mode .card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        :root.light-mode .topbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
         /* ==================== RESET ==================== */
         * {
             margin: 0;
@@ -39,125 +67,297 @@
         /* ==================== SIDEBAR ==================== */
         .sidebar {
             width: 260px;
-            background-color: var(--bg-secondary);
-            border-right: 1px solid var(--border);
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, #16182e 100%);
+            border-right: none;
             display: flex;
             flex-direction: column;
             position: fixed;
             height: 100vh;
             left: 0;
             top: 0;
-            transition: transform 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar.collapsed .logo,
+        .sidebar.collapsed .user-info,
+        .sidebar.collapsed .menu-item span:not(.menu-icon) {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed .user-profile {
+            justify-content: center;
+        }
+
+        .sidebar.collapsed .menu-item {
+            justify-content: center;
+            padding: 1rem;
         }
 
         .sidebar-header {
             padding: 2rem 1.5rem;
             border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .collapse-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(108, 99, 255, 0.15);
+            border: none;
+            color: var(--accent);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .collapse-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .sidebar.collapsed .collapse-btn {
+            right: 50%;
+            transform: translateX(50%) rotate(180deg);
+        }
+        
+        .sidebar.collapsed .collapse-btn:hover {
+            transform: translateX(50%) rotate(180deg) scale(1.05);
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.6rem;
+            font-weight: 800;
             background: linear-gradient(135deg, var(--accent), var(--success));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 1.5rem;
+            letter-spacing: -0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar.collapsed .logo {
+            opacity: 0;
+            font-size: 0;
+            margin-bottom: 0;
         }
 
         .user-profile {
             display: flex;
             align-items: center;
             gap: 1rem;
+            padding: 1rem;
+            background: rgba(108, 99, 255, 0.12);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .user-profile:hover {
+            background: rgba(108, 99, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .sidebar.collapsed .user-profile {
+            justify-content: center;
+            padding: 1rem 0.5rem;
         }
 
         .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            border-radius: 14px;
             background: linear-gradient(135deg, var(--accent), var(--success));
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
         }
 
         .user-avatar:hover {
-            transform: scale(1.05);
+            transform: scale(1.08) rotate(-3deg);
         }
 
         .user-info {
             flex: 1;
+            min-width: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar.collapsed .user-info {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
         }
 
         .user-name {
             font-weight: 600;
             font-size: 0.95rem;
             margin-bottom: 0.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .user-role {
             font-size: 0.75rem;
             color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .sidebar-menu {
             flex: 1;
-            padding: 1.5rem 0;
+            padding: 1.5rem 0.75rem;
             overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .sidebar-menu::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb:hover {
+            background: rgba(108, 99, 255, 0.3);
         }
 
         .menu-item {
-            padding: 1rem 1.5rem;
+            padding: 0.9rem 1.25rem;
+            margin-bottom: 0.5rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             gap: 1rem;
             position: relative;
+            border-radius: 12px;
+            color: var(--text-secondary);
         }
 
         .menu-item::before {
             content: '';
             position: absolute;
             left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 0;
             background: var(--accent);
-            transform: scaleY(0);
-            transition: transform 0.3s ease;
+            border-radius: 0 4px 4px 0;
+            transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .menu-item:hover::before {
-            transform: scaleY(1);
+            height: 60%;
         }
 
         .menu-item:hover {
-            background: rgba(108, 99, 255, 0.1);
+            background: rgba(108, 99, 255, 0.12);
+            color: var(--text-primary);
+            transform: translateX(4px);
         }
 
         .menu-item.active {
             background: rgba(108, 99, 255, 0.15);
+            color: var(--accent);
             font-weight: 600;
         }
 
         .menu-item.active::before {
-            transform: scaleY(1);
+            height: 70%;
+        }
+        
+        .sidebar.collapsed .menu-item {
+            justify-content: center;
+            padding: 1rem;
+            transform: none;
+        }
+        
+        .sidebar.collapsed .menu-item:hover {
+            transform: none;
         }
 
         .menu-icon {
-            font-size: 1.3rem;
-            transition: transform 0.3s ease;
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+            min-width: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .menu-item:hover .menu-icon {
+            transform: scale(1.15);
+        }
+        
+        .menu-item.active .menu-icon {
             transform: scale(1.1);
+        }
+        
+        .menu-item span:not(.menu-icon) {
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .sidebar.collapsed .menu-item span:not(.menu-icon) {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+        
+        /* Tooltip para sidebar colapsado */
+        .menu-item::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: calc(100% + 1rem);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+        }
+
+        .sidebar.collapsed .menu-item:hover::after {
+            opacity: 1;
         }
 
         /* ==================== MAIN CONTENT ==================== */
@@ -167,7 +367,11 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            transition: margin-left 0.3s ease;
+            transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 80px;
         }
 
         /* ==================== TOP BAR ==================== */
@@ -237,6 +441,15 @@
             display: none;
         }
 
+        /* ==================== SPA SECTIONS ==================== */
+        .spa-section {
+            display: none;
+        }
+
+        .spa-section.active {
+            display: block;
+        }
+
         /* ==================== DASHBOARD GRID ==================== */
         .dashboard {
             flex: 1;
@@ -274,6 +487,7 @@
         .card:nth-child(2) { animation-delay: 0.2s; }
         .card:nth-child(3) { animation-delay: 0.3s; }
         .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
 
         .card:hover {
             transform: translateY(-5px);
@@ -284,205 +498,51 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .card-title {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
-        }
-
-        .card-icon {
-            font-size: 1.5rem;
-        }
-
-        /* ==================== STUDY TIME CARD (VELOCIMETER) ==================== */
-        .velocimeter {
-            position: relative;
-            width: 200px;
-            height: 100px;
-            margin: 2rem auto;
-        }
-
-        .velocimeter-arc {
-            width: 100%;
-            height: 100%;
-        }
-
-        .velocimeter-needle {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 3px;
-            height: 80px;
-            background: var(--accent);
-            transform-origin: bottom center;
-            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            border-radius: 3px;
-        }
-
-        .velocimeter-center {
-            position: absolute;
-            bottom: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 15px;
-            height: 15px;
-            background: var(--accent);
-            border-radius: 50%;
-            z-index: 1;
-            box-shadow: 0 0 10px rgba(108, 99, 255, 0.5);
-        }
-
-        .study-stats {
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .study-hours {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .study-goal {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
-        }
-
-        .goal-edit-btn {
-            background: none;
-            border: none;
-            color: var(--accent);
-            cursor: pointer;
-            font-size: 0.8rem;
-            margin-left: 0.5rem;
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
-        }
-
-        .goal-edit-btn:hover {
-            opacity: 1;
-        }
-
-        .reset-week-btn {
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            background: rgba(255, 107, 157, 0.1);
-            border: 1px solid var(--danger);
-            border-radius: 8px;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-        }
-
-        .reset-week-btn:hover {
-            background: rgba(255, 107, 157, 0.2);
-        }
-
-        /* ==================== FLASHCARDS CARD ==================== */
-        .flashcard-preview {
-            text-align: center;
-            padding: 2rem 0;
-        }
-
-        .flashcard-icon-large {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent), var(--success));
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 10px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        /* ==================== CALENDAR CARD ==================== */
-        .exam-info {
-            background: rgba(108, 99, 255, 0.1);
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin-bottom: 1rem;
-            border-left: 4px solid var(--accent);
-            transition: all 0.3s ease;
-        }
-
-        .exam-info:hover {
-            background: rgba(108, 99, 255, 0.15);
-        }
-
-        .exam-subject {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .exam-date {
-            color: var(--text-secondary);
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .countdown {
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--warning);
-            font-weight: 600;
+        .card-icon {
+            font-size: 1.3rem;
         }
 
-        .btn-secondary {
-            background: rgba(108, 99, 255, 0.2);
-            border: 1px solid var(--accent);
-            padding: 0.8rem 2rem;
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-weight: 600;
+        .card-action {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1rem;
-            width: 100%;
+            padding: 0.5rem;
+            border-radius: 8px;
         }
 
-        .btn-secondary:hover {
-            background: rgba(108, 99, 255, 0.3);
-        }
-
-        .btn-secondary:active {
-            transform: scale(0.98);
+        .card-action:hover {
+            color: var(--text-primary);
+            background: rgba(108, 99, 255, 0.1);
         }
 
         /* ==================== TIMER CARD ==================== */
-        .timer-display {
+        .timer-card {
             text-align: center;
-            font-size: 3rem;
+        }
+
+        .timer-display {
+            font-size: 4rem;
             font-weight: 700;
             margin: 1.5rem 0;
-            font-family: 'Courier New', monospace;
-            position: relative;
+            font-variant-numeric: tabular-nums;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .timer-display.pulse {
@@ -491,126 +551,434 @@
 
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+            50% { opacity: 0.7; }
         }
 
         .timer-controls {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
         }
 
         .timer-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .timer-btn.play,
+        .timer-btn.pause {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+        }
+
+        .timer-btn.stop {
+            background: rgba(255, 107, 157, 0.2);
+            color: var(--danger);
+        }
+
+        .timer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .timer-btn:active {
+            transform: translateY(0);
+        }
+
+        .timer-modes {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem;
+            border-radius: 12px;
+        }
+
+        .mode-btn {
             flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .mode-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .custom-input {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .custom-input input {
+            width: 80px;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .custom-input input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+        }
+
+        /* ==================== WEEKLY HOURS CARD ==================== */
+        .velocimeter {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 1.5rem auto;
+        }
+
+        .velocimeter-bg,
+        .velocimeter-progress {
+            fill: none;
+            stroke-width: 12;
+            stroke-linecap: round;
+        }
+
+        .velocimeter-bg {
+            stroke: rgba(255, 255, 255, 0.1);
+        }
+
+        .velocimeter-progress {
+            stroke: url(#gradient);
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .velocimeter-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .velocimeter-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .velocimeter-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+        .hours-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
             padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+        }
+
+        .hours-item {
+            text-align: center;
+        }
+
+        .hours-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .hours-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+        .hours-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .hours-btn {
+            flex: 1;
+            padding: 0.7rem;
             border: none;
             border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1rem;
-            position: relative;
-            overflow: hidden;
+            font-size: 0.85rem;
         }
 
-        .timer-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
+        .hours-btn.edit {
+            background: rgba(108, 99, 255, 0.2);
+            color: var(--accent);
         }
 
-        .timer-btn:active::before {
-            width: 300px;
-            height: 300px;
+        .hours-btn.reset {
+            background: rgba(255, 107, 157, 0.2);
+            color: var(--danger);
         }
 
-        .timer-btn.play {
-            background: var(--success);
-            color: white;
+        .hours-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-        .timer-btn.pause {
-            background: var(--warning);
-            color: var(--bg-dark);
+        /* ==================== STATS CARD ==================== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
         }
 
-        .timer-btn.stop {
-            background: var(--danger);
-            color: white;
+        .stat-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
         }
 
-        .timer-btn:hover {
-            transform: scale(1.05);
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .timer-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
         }
 
-        .timer-mode {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .mode-btn {
-            flex: 1;
-            padding: 0.6rem;
-            background: rgba(108, 99, 255, 0.1);
+        /* ==================== EXAM COUNTDOWN ==================== */
+        .exam-countdown {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(78, 205, 196, 0.1));
+            padding: 1.5rem;
+            border-radius: 12px;
             border: 1px solid var(--border);
+            margin-top: 1rem;
+        }
+
+        .exam-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .exam-subject {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .exam-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .exam-time-remaining {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 1rem 0;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .exam-urgency {
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 0.5rem;
             border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .exam-urgency.urgent {
+            background: rgba(255, 107, 157, 0.2);
+            color: var(--danger);
+        }
+
+        .exam-urgency.soon {
+            background: rgba(255, 217, 61, 0.2);
+            color: var(--warning);
+        }
+
+        .exam-urgency.normal {
+            background: rgba(78, 205, 196, 0.2);
+            color: var(--success);
+        }
+
+        /* ==================== QUICK ACTIONS ==================== */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .quick-action {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.2rem;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .quick-action:hover {
+            background: rgba(108, 99, 255, 0.1);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .quick-action-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-action-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* ==================== MODAL ==================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
             color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .mode-btn.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            transform: scale(1.05);
+        .modal-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
         }
 
-        .mode-btn:hover:not(.active) {
-            background: rgba(108, 99, 255, 0.2);
-        }
-
-        .custom-time-input {
-            width: 100%;
-            padding: 0.8rem;
-            background: rgba(108, 99, 255, 0.1);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .custom-time-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
-        }
-
-        .session-history {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .session-count {
-            text-align: center;
-            font-size: 0.85rem;
+        .modal-btn.secondary {
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-secondary);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         /* ==================== TOAST NOTIFICATIONS ==================== */
@@ -620,19 +988,21 @@
             right: 2rem;
             background: var(--bg-card);
             padding: 1rem 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px var(--shadow);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
             gap: 1rem;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
-            z-index: 2000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 3000;
             border-left: 4px solid var(--success);
         }
 
         .toast.show {
-            transform: translateX(0);
+            transform: translateY(0);
+            opacity: 1;
         }
 
         .toast.error {
@@ -640,96 +1010,30 @@
         }
 
         .toast-icon {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
         }
 
         .toast-message {
-            flex: 1;
+            font-weight: 500;
         }
 
-        /* ==================== MODAL ==================== */
-        .modal-overlay {
+        /* ==================== SIDEBAR OVERLAY (MOBILE) ==================== */
+        .sidebar-overlay {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1500;
-            backdrop-filter: blur(5px);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        .modal-overlay.show {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--bg-card);
-            border-radius: 20px;
-            padding: 2rem;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 10px 40px var(--shadow);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.show .modal {
-            transform: scale(1);
-        }
-
-        .modal-header {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-input {
-            width: 100%;
-            padding: 0.8rem;
-            background: rgba(108, 99, 255, 0.1);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .modal-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .modal-btn {
-            flex: 1;
-            padding: 0.8rem;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .modal-btn.cancel {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-        }
-
-        .modal-btn.confirm {
-            background: var(--accent);
-            color: white;
-        }
-
-        .modal-btn:hover {
-            transform: translateY(-2px);
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
         }
 
         /* ==================== RESPONSIVE ==================== */
@@ -750,6 +1054,14 @@
                 display: flex;
             }
 
+            .topbar-left h1 {
+                font-size: 1.3rem;
+            }
+
+            .date-display {
+                display: none;
+            }
+
             .dashboard {
                 padding: 1rem;
             }
@@ -758,8 +1070,17 @@
                 grid-template-columns: 1fr;
             }
 
-            .date-display {
-                display: none;
+            .timer-display {
+                font-size: 3rem;
+            }
+
+            .velocimeter {
+                width: 150px;
+                height: 150px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
 
             .toast {
@@ -769,62 +1090,343 @@
             }
         }
 
-        /* ==================== SIDEBAR OVERLAY ==================== */
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            z-index: 999;
+        @media (max-width: 480px) {
+            .topbar {
+                padding: 1rem;
+            }
+
+            .timer-display {
+                font-size: 2.5rem;
+            }
+
+            .timer-controls {
+                flex-direction: column;
+            }
+
+            .quick-actions-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .sidebar-overlay.show {
+        /* ==================== PLACEHOLDER SECTIONS STYLES ==================== */
+        .placeholder-section {
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .placeholder-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .placeholder-section p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* ==================== PROFILE SECTION ==================== */
+        .profile-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .profile-avatar-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 4px solid var(--bg-card);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .avatar-edit-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 3px solid var(--bg-dark);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .avatar-edit-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.1);
+        }
+
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-role {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .profile-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .profile-section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .profile-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-label {
             display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .profile-input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .profile-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .profile-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .profile-btn {
+            flex: 1;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .profile-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+        }
+
+        .profile-btn.secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        .profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .stats-list {
+            list-style: none;
+        }
+
+        .stats-list li {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stats-list li:last-child {
+            border-bottom: none;
+        }
+
+        .stats-label {
+            color: var(--text-secondary);
+        }
+
+        .stats-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--accent);
+        }
+        
+        /* ==================== DYNAMIC LISTS ==================== */
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .list-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(4px);
+        }
+        
+        .list-item.completed {
+            opacity: 0.6;
+        }
+        
+        .list-item-content {
+            flex: 1;
+        }
+        
+        .list-item-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .list-item-meta {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .delete-btn:hover {
+            background: rgba(255, 107, 157, 0.2);
+            transform: scale(1.1);
         }
     </style>
 </head>
 <body>
-    <!-- ==================== SIDEBAR ==================== -->
+    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="logo">Learn it</div>
+            <button class="collapse-btn" id="collapseBtn">◀</button>
+            <div class="logo">Learn it 📚</div>
             <div class="user-profile">
-                <div class="user-avatar" title="Cambiar avatar">JD</div>
+                <div class="user-avatar">JD</div>
                 <div class="user-info">
                     <div class="user-name">John Doe</div>
                     <div class="user-role">Estudiante</div>
                 </div>
             </div>
         </div>
+
         <nav class="sidebar-menu">
-            <div class="menu-item active" data-section="dashboard">
-                <span class="menu-icon">📚</span>
-                <span>Asignaturas</span>
+            <div class="menu-item active" data-section="section-dashboard" data-tooltip="Dashboard">
+                <span class="menu-icon">📊</span>
+                <span>Dashboard</span>
             </div>
-            <div class="menu-item" data-section="online">
-                <span class="menu-icon">🌐</span>
-                <span>Temas online</span>
+            <div class="menu-item" data-section="section-subjects" data-tooltip="Mis Materias">
+                <span class="menu-icon">📖</span>
+                <span>Mis Materias</span>
             </div>
-            <div class="menu-item" data-section="exams">
+            <div class="menu-item" data-section="section-exams" data-tooltip="Exámenes">
                 <span class="menu-icon">📝</span>
                 <span>Exámenes</span>
             </div>
-            <div class="menu-item" data-section="assignments">
-                <span class="menu-icon">📋</span>
-                <span>Trabajos</span>
+            <div class="menu-item" data-section="section-assignments" data-tooltip="Tareas">
+                <span class="menu-icon">✅</span>
+                <span>Tareas</span>
+            </div>
+            <div class="menu-item" data-section="section-flashcards" data-tooltip="Flashcards">
+                <span class="menu-icon">🃏</span>
+                <span>Flashcards</span>
+            </div>
+            <div class="menu-item" data-section="section-games" data-tooltip="Minijuegos">
+                <span class="menu-icon">🎮</span>
+                <span>Minijuegos</span>
+            </div>
+            <div class="menu-item" data-section="section-profile" data-tooltip="Perfil">
+                <span class="menu-icon">⚙️</span>
+                <span>Perfil</span>
             </div>
         </nav>
     </aside>
 
-    <!-- SIDEBAR OVERLAY FOR MOBILE -->
+    <!-- Sidebar Overlay (Mobile) -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- ==================== MAIN CONTENT ==================== -->
+    <!-- Main Content -->
     <main class="main-content">
-        <!-- TOP BAR -->
+        <!-- Top Bar -->
         <header class="topbar">
             <div class="topbar-left">
                 <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn">☰</button>
@@ -832,138 +1434,1479 @@
                 <div class="date-display" id="dateDisplay"></div>
             </div>
             <div class="topbar-right">
-                <button class="icon-btn" title="Profile">👤</button>
-                <button class="icon-btn" title="Settings">⚙️</button>
+                <button class="icon-btn">🔔</button>
+                <button class="icon-btn" id="themeToggle">💡</button>
             </div>
         </header>
 
-        <!-- DASHBOARD CARDS -->
-        <div class="dashboard">
-            <div class="cards-grid">
-                <!-- CARD 1: STUDY TIME -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Tiempo de estudio</h3>
-                        <span class="card-icon">⏱️</span>
-                    </div>
-                    <div class="velocimeter">
-                        <svg class="velocimeter-arc" viewBox="0 0 200 100">
-                            <path d="M 10 90 A 90 90 0 0 1 190 90" 
-                                  fill="none" 
-                                  stroke="rgba(108, 99, 255, 0.2)" 
-                                  stroke-width="15" 
-                                  stroke-linecap="round"/>
-                            <path id="progressArc" 
-                                  d="M 10 90 A 90 90 0 0 1 190 90" 
-                                  fill="none" 
-                                  stroke="url(#gradient)" 
-                                  stroke-width="15" 
-                                  stroke-linecap="round"
-                                  stroke-dasharray="282.7"
-                                  stroke-dashoffset="282.7"/>
-                            <defs>
-                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" style="stop-color:#6c63ff"/>
-                                    <stop offset="100%" style="stop-color:#4ecdc4"/>
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        <div class="velocimeter-needle" id="needle"></div>
-                        <div class="velocimeter-center"></div>
-                    </div>
-                    <div class="study-stats">
-                        <div class="study-hours"><span id="weeklyHours">0</span>h</div>
-                        <div class="study-goal">
-                            Meta semanal: <span id="weeklyGoal">20</span>h
-                            <button class="goal-edit-btn" id="editGoalBtn">✏️</button>
+        <!-- Section: Dashboard -->
+        <section id="section-dashboard" class="spa-section active">
+            <div class="dashboard">
+                <div class="cards-grid">
+                    <!-- Timer Card -->
+                    <div class="card timer-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-icon">⏱️</span>
+                                <span>Temporizador</span>
+                            </div>
                         </div>
-                        <button class="reset-week-btn" id="resetWeekBtn">🔄 Reiniciar semana</button>
-                    </div>
-                </div>
 
-                <!-- CARD 2: FLASHCARDS -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Flashcards</h3>
-                        <span class="card-icon">🎴</span>
-                    </div>
-                    <div class="flashcard-preview">
-                        <div class="flashcard-icon-large">🎴</div>
-                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-                            Repasa tus conceptos clave con flashcards interactivas
-                        </p>
-                        <button class="btn-primary" onclick="showToast('Función de flashcards próximamente', 'info')">
-                            Ir a Flashcards
-                        </button>
-                    </div>
-                </div>
-
-                <!-- CARD 3: CALENDAR / NEXT EXAM -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Próximo examen</h3>
-                        <span class="card-icon">📅</span>
-                    </div>
-                    <div class="exam-info">
-                        <div class="exam-subject">Matemáticas Avanzadas</div>
-                        <div class="exam-date">
-                            <span>📆</span>
-                            <span id="examDate">15 de Marzo, 2024</span>
+                        <div class="timer-modes">
+                            <button class="mode-btn active" id="customModeBtn">Personalizado</button>
+                            <button class="mode-btn" id="pomodoroModeBtn">Pomodoro</button>
                         </div>
-                        <div class="countdown" id="examCountdown"></div>
-                    </div>
-                    <button class="btn-secondary" onclick="showToast('Calendario completo próximamente', 'info')">
-                        Ver calendario completo
-                    </button>
-                </div>
 
-                <!-- CARD 4: STUDY TIMER -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Temporizador</h3>
-                        <span class="card-icon">⏲️</span>
+                        <div class="timer-display" id="timerDisplay">25:00</div>
+
+                        <div class="timer-controls">
+                            <button class="timer-btn play" id="playBtn">▶ Iniciar</button>
+                            <button class="timer-btn stop" id="stopBtn">⏹ Detener</button>
+                        </div>
+
+                        <div class="custom-input">
+                            <label for="customMinutes">Minutos:</label>
+                            <input type="number" id="customMinutes" min="1" max="180" value="25">
+                        </div>
+
+                        <div class="custom-input" style="margin-top: 1rem;">
+                            <label for="timerSubjectSelect">Materia (opcional):</label>
+                            <select id="timerSubjectSelect" style="width: 100%; padding: 0.5rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;">
+                                <option value="">Sin materia</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="timer-display" id="timerDisplay">00:00</div>
-                    <div class="timer-mode">
-                        <button class="mode-btn active" id="customModeBtn">Personalizado</button>
-                        <button class="mode-btn" id="pomodoroModeBtn">Pomodoro (25min)</button>
+
+                    <!-- Weekly Hours Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-icon">📈</span>
+                                <span>Horas Semanales</span>
+                            </div>
+                        </div>
+
+                        <div class="velocimeter">
+                            <svg width="180" height="180" viewBox="0 0 180 180">
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#6c63ff;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#4ecdc4;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <circle class="velocimeter-bg" cx="90" cy="90" r="70"></circle>
+                                <circle class="velocimeter-progress" id="velocimeterProgress" 
+                                        cx="90" cy="90" r="70" 
+                                        stroke-dasharray="439.8" 
+                                        stroke-dashoffset="439.8"
+                                        transform="rotate(-90 90 90)">
+                                </circle>
+                            </svg>
+                            <div class="velocimeter-center">
+                                <div class="velocimeter-value" id="velocimeterValue">0h</div>
+                                <div class="velocimeter-label">de <span id="weeklyGoal">25</span>h</div>
+                            </div>
+                        </div>
+
+                        <div class="hours-info">
+                            <div class="hours-item">
+                                <div class="hours-value" id="weeklyHours">0</div>
+                                <div class="hours-label">Horas</div>
+                            </div>
+                            <div class="hours-item">
+                                <div class="hours-value" id="weeklyPercentage">0%</div>
+                                <div class="hours-label">Progreso</div>
+                            </div>
+                        </div>
+
+                        <div class="hours-actions">
+                            <button class="hours-btn edit" id="editGoalBtn">✏️ Editar Meta</button>
+                            <button class="hours-btn reset" id="resetWeekBtn">🔄 Resetear</button>
+                        </div>
                     </div>
-                    <input type="number" 
-                           class="custom-time-input" 
-                           id="customMinutes" 
-                           placeholder="Minutos (1-180)" 
-                           min="1" 
-                           max="180"
-                           value="25">
-                    <div class="timer-controls">
-                        <button class="timer-btn play" id="playBtn">▶ Iniciar</button>
-                        <button class="timer-btn stop" id="stopBtn">⬛ Detener</button>
+
+                    <!-- Stats Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-icon">📊</span>
+                                <span>Estadísticas</span>
+                            </div>
+                        </div>
+
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="todaySessions">0</div>
+                                <div class="stat-label">Sesiones hoy</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="avgDailyHours">0.0</div>
+                                <div class="stat-label">Promedio diario (h)</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="currentStreak">0</div>
+                                <div class="stat-label">Racha días</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalHours">0.0</div>
+                                <div class="stat-label">Total horas</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="session-history">
-                        <div class="session-count" id="sessionCount">Sesiones hoy: 0</div>
+
+                    <!-- Next Exam Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-icon">📅</span>
+                                <span>Próximo Examen</span>
+                            </div>
+                            <button class="card-action" id="configExamBtn">⚙️</button>
+                        </div>
+
+                        <div class="exam-countdown" id="examCountdownCard">
+                            <div class="exam-info">
+                                <div class="exam-subject" id="examSubject">Sin exámenes</div>
+                                <div class="exam-date" id="examDate">-</div>
+                            </div>
+                            <div class="exam-time-remaining" id="examTimeRemaining">-</div>
+                            <div class="exam-urgency normal" id="examUrgency">Configura tu próximo examen</div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="card-icon">⚡</span>
+                                <span>Acciones Rápidas</span>
+                            </div>
+                        </div>
+
+                        <div class="quick-actions-grid">
+                            <div class="quick-action" onclick="openModal('taskModal')">
+                                <div class="quick-action-icon">➕</div>
+                                <div class="quick-action-label">Nueva Tarea</div>
+                            </div>
+                            <div class="quick-action" onclick="openModal('examModal')">
+                                <div class="quick-action-icon">📝</div>
+                                <div class="quick-action-label">Nuevo Examen</div>
+                            </div>
+                            <div class="quick-action" onclick="openModal('subjectModal')">
+                                <div class="quick-action-icon">📚</div>
+                                <div class="quick-action-label">Nueva Materia</div>
+                            </div>
+                            <div class="quick-action" onclick="navigateToSection('section-profile')">
+                                <div class="quick-action-icon">📊</div>
+                                <div class="quick-action-label">Ver Reportes</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- Section: Subjects -->
+        <section id="section-subjects" class="spa-section">
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>📖 Mis Materias</h2>
+                        <button class="timer-btn play" id="addSubjectBtn">➕ Nueva Materia</button>
+                    </div>
+                    <div id="subjectsList" style="margin-top: 1.5rem;">
+                        <p style="color: var(--text-secondary); text-align: center;">No hay materias aún. ¡Añade tu primera materia!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Exams -->
+        <section id="section-exams" class="spa-section">
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>📝 Exámenes</h2>
+                        <button class="timer-btn play" id="addExamBtn">➕ Nuevo Examen</button>
+                    </div>
+                    <div id="examsList" style="margin-top: 1.5rem;">
+                        <p style="color: var(--text-secondary); text-align: center;">No hay exámenes programados. ¡Añade tu primer examen!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Assignments -->
+        <section id="section-assignments" class="spa-section">
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>✅ Tareas</h2>
+                        <button class="timer-btn play" id="addTaskBtn">➕ Nueva Tarea</button>
+                    </div>
+                    <div id="tasksList" style="margin-top: 1.5rem;">
+                        <p style="color: var(--text-secondary); text-align: center;">No hay tareas pendientes. ¡Añade tu primera tarea!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Flashcards -->
+        <section id="section-flashcards" class="spa-section">
+            <div class="dashboard">
+                <div class="placeholder-section">
+                    <h2>🃏 Flashcards</h2>
+                    <p>Crea y practica con tarjetas de estudio para mejorar tu memoria.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Games -->
+        <section id="section-games" class="spa-section">
+            <div class="dashboard">
+                <div class="placeholder-section">
+                    <h2>🎮 Minijuegos</h2>
+                    <p>Aprende jugando con minijuegos educativos interactivos.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Profile -->
+        <section id="section-profile" class="spa-section">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="profile-avatar-container">
+                        <div class="profile-avatar" id="profileAvatar">JD</div>
+                        <button class="avatar-edit-btn" id="avatarEditBtn">📷</button>
+                    </div>
+                    <h2 class="profile-name" id="profileDisplayName">John Doe</h2>
+                    <p class="profile-role">Estudiante</p>
+                </div>
+
+                <div class="profile-grid">
+                    <!-- Personal Information -->
+                    <div class="profile-section">
+                        <h3 class="profile-section-title">
+                            <span>👤</span>
+                            <span>Información Personal</span>
+                        </h3>
+                        <form id="profileForm">
+                            <div class="profile-form-group">
+                                <label class="profile-label" for="profileName">Nombre Completo</label>
+                                <input type="text" class="profile-input" id="profileName" value="John Doe">
+                            </div>
+                            <div class="profile-form-group">
+                                <label class="profile-label" for="profileEmail">Correo Electrónico</label>
+                                <input type="email" class="profile-input" id="profileEmail" value="john.doe@example.com">
+                            </div>
+                            <div class="profile-form-group">
+                                <label class="profile-label" for="profileUniversity">Universidad</label>
+                                <input type="text" class="profile-input" id="profileUniversity" value="Universidad Nacional">
+                            </div>
+                            <div class="profile-form-group">
+                                <label class="profile-label" for="profileCareer">Carrera</label>
+                                <input type="text" class="profile-input" id="profileCareer" value="Ingeniería Informática">
+                            </div>
+                            <div class="profile-actions">
+                                <button type="button" class="profile-btn secondary" id="cancelProfileBtn">Cancelar</button>
+                                <button type="submit" class="profile-btn primary">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Statistics -->
+                    <div class="profile-section">
+                        <h3 class="profile-section-title">
+                            <span>📊</span>
+                            <span>Estadísticas</span>
+                        </h3>
+                        <ul class="stats-list">
+                            <li>
+                                <span class="stats-label">Horas totales estudiadas</span>
+                                <span class="stats-value" id="profileTotalHours">0h</span>
+                            </li>
+                            <li>
+                                <span class="stats-label">Sesiones completadas</span>
+                                <span class="stats-value" id="profileTotalSessions">0</span>
+                            </li>
+                            <li>
+                                <span class="stats-label">Racha actual</span>
+                                <span class="stats-value" id="profileCurrentStreak">0 días</span>
+                            </li>
+                            <li>
+                                <span class="stats-label">Mejor racha</span>
+                                <span class="stats-value" id="profileBestStreak">0 días</span>
+                            </li>
+                            <li>
+                                <span class="stats-label">Promedio semanal</span>
+                                <span class="stats-value" id="profileWeeklyAvg">0h</span>
+                            </li>
+                            <li>
+                                <span class="stats-label">Exámenes próximos</span>
+                                <span class="stats-value" id="profileUpcomingExams">0</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Settings & Actions -->
+                    <div class="profile-section">
+                        <h3 class="profile-section-title">
+                            <span>⚙️</span>
+                            <span>Configuración</span>
+                        </h3>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <button class="profile-btn primary" id="reportBugBtn">
+                                🐛 Reportar un Bug
+                            </button>
+                            <button class="profile-btn secondary" id="resetAllBtn" style="background: rgba(255, 107, 157, 0.2); color: var(--danger);">
+                                🔄 Restaurar de Fábrica
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- TOAST NOTIFICATION -->
-    <div class="toast" id="toast">
-        <span class="toast-icon" id="toastIcon">✓</span>
-        <div class="toast-message" id="toastMessage"></div>
-    </div>
-
-    <!-- MODAL FOR GOAL EDITING -->
-    <div class="modal-overlay" id="goalModal">
-        <div class="modal">
-            <div class="modal-header">Editar meta semanal</div>
-            <input type="number" class="modal-input" id="goalInput" placeholder="Horas objetivo" min="1" max="168">
-            <div class="modal-actions">
-                <button class="modal-btn cancel" id="cancelGoalBtn">Cancelar</button>
-                <button class="modal-btn confirm" id="confirmGoalBtn">Guardar</button>
+    <!-- Goal Modal -->
+    <div class="modal" id="goalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">⚙️ Configurar Meta Semanal</h3>
+                <p class="modal-description">Establece tu objetivo de horas de estudio</p>
+            </div>
+            <div class="modal-body">
+                <input type="number" id="goalInput" class="modal-input" min="1" max="168" placeholder="Horas por semana">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="cancelGoalBtn">Cancelar</button>
+                <button class="modal-btn primary" id="confirmGoalBtn">Confirmar</button>
             </div>
         </div>
     </div>
 
-    <script>
-        // ==================== UTILITY
+    <!-- Exam Modal -->
+    <div class="modal" id="examModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="examModalTitle">📝 Añadir Examen</h3>
+                <p class="modal-description">Configura tu próximo examen</p>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="examSubjectInput" class="modal-input" placeholder="Materia" style="margin-bottom: 1rem;">
+                <input type="datetime-local" id="examDateInput" class="modal-input">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="cancelExamBtn">Cancelar</button>
+                <button class="modal-btn primary" id="saveExamBtn">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subject Modal -->
+    <div class="modal" id="subjectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">📖 Añadir Materia</h3>
+                <p class="modal-description">Crea una nueva materia</p>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="subjectNameInput" class="modal-input" placeholder="Nombre de la materia" style="margin-bottom: 1rem;">
+                <input type="color" id="subjectColorInput" class="modal-input" value="#6c63ff">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="cancelSubjectBtn">Cancelar</button>
+                <button class="modal-btn primary" id="saveSubjectBtn">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">✅ Nueva Tarea</h3>
+                <p class="modal-description">Añade una tarea pendiente</p>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="taskTitleInput" class="modal-input" placeholder="Título de la tarea" style="margin-bottom: 1rem;">
+                <select id="taskSubjectInput" class="modal-input" style="margin-bottom: 1rem;">
+                    <option value="">Selecciona una materia</option>
+                </select>
+                <input type="date" id="taskDueInput" class="modal-input" style="margin-bottom: 1rem;">
+                <select id="taskPriorityInput" class="modal-input">
+                    <option value="low">Baja</option>
+                    <option value="medium" selected>Media</option>
+                    <option value="high">Alta</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="cancelTaskBtn">Cancelar</button>
+                <button class="modal-btn primary" id="saveTaskBtn">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bug Report Modal -->
+    <div class="modal" id="bugModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">🐛 Reportar Bug</h3>
+                <p class="modal-description">Ayúdanos a mejorar reportando errores</p>
+            </div>
+            <div class="modal-body">
+                <textarea id="bugDescriptionInput" class="modal-input" rows="5" placeholder="Describe el problema que encontraste..." style="resize: vertical; min-height: 100px;"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="cancelBugBtn">Cancelar</button>
+                <button class="modal-btn primary" id="sendBugBtn">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div class="modal" id="resetModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">⚠️ Restaurar de Fábrica</h3>
+                <p class="modal-description">Esto borrará TODOS tus datos</p>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--danger); font-weight: 600;">¿Estás seguro? Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="cancelResetBtn">Cancelar</button>
+                <button class="modal-btn primary" id="confirmResetBtn" style="background: var(--danger);">Confirmar Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✓</span>
+        <span class="toast-message" id="toastMessage"></span>
+    </div>
+
+<script>
+// ==================== STORAGE KEYS ====================
+const STORAGE = {
+    THEME: 'learnit_theme',
+    SIDEBAR_COLLAPSED: 'learnit_sidebar_collapsed',
+    PROFILE: 'learnit_profile',
+    WEEKLY_HOURS: 'learnit_weekly_hours',
+    WEEKLY_GOAL: 'learnit_weekly_goal',
+    WEEK_START: 'learnit_week_start',
+    TOTAL_HOURS: 'learnit_total_hours',
+    TOTAL_SESSIONS: 'learnit_total_sessions',
+    TODAY_SESSIONS: 'learnit_today_sessions',
+    LAST_SESSION_DATE: 'learnit_last_session_date',
+    STUDY_HISTORY: 'learnit_study_history',
+    CURRENT_STREAK: 'learnit_current_streak',
+    BEST_STREAK: 'learnit_best_streak',
+    LAST_STUDY_DATE: 'learnit_last_study_date',
+    EXAMS: 'learnit_exams',
+    SUBJECTS: 'learnit_subjects',
+    TASKS: 'learnit_tasks'
+};
+
+// ==================== UTILITY FUNCTIONS ====================
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+    const toastIcon = toast.querySelector('.toast-icon');
+    
+    toastMessage.textContent = message;
+    toastIcon.textContent = type === 'error' ? '✗' : '✓';
+    toast.className = 'toast show';
+    if (type === 'error') toast.classList.add('error');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+function getInitials(name) {
+    return name
+        .split(' ')
+        .map(word => word[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+}
+
+function formatDate(date) {
+    return new Date(date).toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+function checkAndResetWeek() {
+    const weekStart = localStorage.getItem(STORAGE.WEEK_START);
+    const now = new Date();
+    const currentWeekStart = new Date(now.setDate(now.getDate() - now.getDay()));
+    currentWeekStart.setHours(0, 0, 0, 0);
+
+    if (!weekStart || new Date(weekStart) < currentWeekStart) {
+        localStorage.setItem(STORAGE.WEEK_START, currentWeekStart.toISOString());
+        localStorage.setItem(STORAGE.WEEKLY_HOURS, '0');
+    }
+}
+
+// ==================== DATA MANAGEMENT ====================
+function getProfile() {
+    const defaultProfile = {
+        name: 'Estudiante',
+        email: '',
+        university: '',
+        career: '',
+        initials: 'ES'
+    };
+    const saved = localStorage.getItem(STORAGE.PROFILE);
+    return saved ? JSON.parse(saved) : defaultProfile;
+}
+
+function saveProfile(profile) {
+    localStorage.setItem(STORAGE.PROFILE, JSON.stringify(profile));
+}
+
+function getWeeklyHours() {
+    checkAndResetWeek();
+    return parseFloat(localStorage.getItem(STORAGE.WEEKLY_HOURS) || '0');
+}
+
+function setWeeklyHours(hours) {
+    localStorage.setItem(STORAGE.WEEKLY_HOURS, hours.toFixed(2));
+}
+
+function getWeeklyGoal() {
+    return parseInt(localStorage.getItem(STORAGE.WEEKLY_GOAL) || '25');
+}
+
+function setWeeklyGoal(hours) {
+    localStorage.setItem(STORAGE.WEEKLY_GOAL, hours);
+}
+
+function getTotalHours() {
+    return parseFloat(localStorage.getItem(STORAGE.TOTAL_HOURS) || '0');
+}
+
+function addToTotalHours(hours) {
+    const total = getTotalHours() + hours;
+    localStorage.setItem(STORAGE.TOTAL_HOURS, total.toFixed(2));
+}
+
+function getTotalSessions() {
+    return parseInt(localStorage.getItem(STORAGE.TOTAL_SESSIONS) || '0');
+}
+
+function incrementTotalSessions() {
+    const total = getTotalSessions() + 1;
+    localStorage.setItem(STORAGE.TOTAL_SESSIONS, total);
+}
+
+function getTodaySessions() {
+    const today = new Date().toDateString();
+    const lastDate = localStorage.getItem(STORAGE.LAST_SESSION_DATE);
+    
+    if (lastDate !== today) {
+        localStorage.setItem(STORAGE.TODAY_SESSIONS, '0');
+        localStorage.setItem(STORAGE.LAST_SESSION_DATE, today);
+        return 0;
+    }
+    
+    return parseInt(localStorage.getItem(STORAGE.TODAY_SESSIONS) || '0');
+}
+
+function incrementTodaySessions() {
+    const today = new Date().toDateString();
+    localStorage.setItem(STORAGE.LAST_SESSION_DATE, today);
+    const current = getTodaySessions();
+    localStorage.setItem(STORAGE.TODAY_SESSIONS, (current + 1).toString());
+}
+
+function getStudyHistory() {
+    const saved = localStorage.getItem(STORAGE.STUDY_HISTORY);
+    return saved ? JSON.parse(saved) : {};
+}
+
+function addStudySession(hours) {
+    const history = getStudyHistory();
+    const today = new Date().toISOString().split('T')[0];
+    history[today] = (history[today] || 0) + hours;
+    localStorage.setItem(STORAGE.STUDY_HISTORY, JSON.stringify(history));
+}
+
+function calculateStreak() {
+    const history = getStudyHistory();
+    const dates = Object.keys(history).sort().reverse();
+    
+    if (dates.length === 0) return 0;
+    
+    let streak = 0;
+    const today = new Date().toISOString().split('T')[0];
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    
+    // Check if studied today or yesterday
+    if (dates[0] !== today && dates[0] !== yesterday) return 0;
+    
+    for (let i = 0; i < dates.length; i++) {
+        const currentDate = new Date(dates[i]);
+        const expectedDate = new Date(Date.now() - (i * 86400000)).toISOString().split('T')[0];
+        
+        if (dates[i] === expectedDate) {
+            streak++;
+        } else {
+            break;
+        }
+    }
+    
+    return streak;
+}
+
+function updateStreak() {
+    const currentStreak = calculateStreak();
+    localStorage.setItem(STORAGE.CURRENT_STREAK, currentStreak);
+    
+    const bestStreak = parseInt(localStorage.getItem(STORAGE.BEST_STREAK) || '0');
+    if (currentStreak > bestStreak) {
+        localStorage.setItem(STORAGE.BEST_STREAK, currentStreak);
+    }
+}
+
+function getExams() {
+    const saved = localStorage.getItem(STORAGE.EXAMS);
+    return saved ? JSON.parse(saved) : [];
+}
+
+function saveExams(exams) {
+    localStorage.setItem(STORAGE.EXAMS, JSON.stringify(exams));
+}
+
+function getSubjects() {
+    const saved = localStorage.getItem(STORAGE.SUBJECTS);
+    return saved ? JSON.parse(saved) : [];
+}
+
+function saveSubjects(subjects) {
+    localStorage.setItem(STORAGE.SUBJECTS, JSON.stringify(subjects));
+}
+
+function getTasks() {
+    const saved = localStorage.getItem(STORAGE.TASKS);
+    return saved ? JSON.parse(saved) : [];
+}
+
+function saveTasks(tasks) {
+    localStorage.setItem(STORAGE.TASKS, JSON.stringify(tasks));
+}
+
+// ==================== UI UPDATES ====================
+function updateVelocimeter() {
+    const hours = getWeeklyHours();
+    const goal = getWeeklyGoal();
+    const percentage = Math.min((hours / goal) * 100, 100);
+    
+    document.getElementById('weeklyHours').textContent = hours.toFixed(1);
+    document.getElementById('velocimeterValue').textContent = hours.toFixed(1) + 'h';
+    document.getElementById('weeklyGoal').textContent = goal;
+    document.getElementById('weeklyPercentage').textContent = percentage.toFixed(0) + '%';
+    
+    const progress = document.getElementById('velocimeterProgress');
+    const circumference = 439.8;
+    const offset = circumference - (circumference * percentage / 100);
+    progress.style.strokeDashoffset = offset;
+}
+
+function updateStats() {
+    const totalHours = getTotalHours();
+    const totalSessions = getTotalSessions();
+    const todaySessions = getTodaySessions();
+    const currentStreak = parseInt(localStorage.getItem(STORAGE.CURRENT_STREAK) || '0');
+    const history = getStudyHistory();
+    const daysStudied = Object.keys(history).length;
+    const avgDaily = daysStudied > 0 ? totalHours / daysStudied : 0;
+    
+    document.getElementById('todaySessions').textContent = todaySessions;
+    document.getElementById('avgDailyHours').textContent = avgDaily.toFixed(1);
+    document.getElementById('currentStreak').textContent = currentStreak;
+    document.getElementById('totalHours').textContent = totalHours.toFixed(1);
+}
+
+function updateProfileStats() {
+    const totalHours = getTotalHours();
+    const totalSessions = getTotalSessions();
+    const currentStreak = parseInt(localStorage.getItem(STORAGE.CURRENT_STREAK) || '0');
+    const bestStreak = parseInt(localStorage.getItem(STORAGE.BEST_STREAK) || '0');
+    const exams = getExams();
+    const upcomingExams = exams.filter(e => new Date(e.date) > new Date()).length;
+    
+    // Calculate weekly average
+    const history = getStudyHistory();
+    const weeks = Math.ceil(Object.keys(history).length / 7);
+    const weeklyAvg = weeks > 0 ? totalHours / weeks : 0;
+    
+    document.getElementById('profileTotalHours').textContent = totalHours.toFixed(1) + 'h';
+    document.getElementById('profileTotalSessions').textContent = totalSessions;
+    document.getElementById('profileCurrentStreak').textContent = currentStreak + ' días';
+    document.getElementById('profileBestStreak').textContent = bestStreak + ' días';
+    document.getElementById('profileWeeklyAvg').textContent = weeklyAvg.toFixed(1) + 'h';
+    document.getElementById('profileUpcomingExams').textContent = upcomingExams;
+}
+
+function updateExamCountdown() {
+    const exams = getExams();
+    const upcomingExams = exams
+        .filter(e => new Date(e.date) > new Date())
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    if (upcomingExams.length === 0) {
+        document.getElementById('examSubject').textContent = 'Sin exámenes';
+        document.getElementById('examDate').textContent = '-';
+        document.getElementById('examTimeRemaining').textContent = '-';
+        document.getElementById('examUrgency').textContent = 'Configura tu próximo examen';
+        document.getElementById('examUrgency').className = 'exam-urgency normal';
+        return;
+    }
+    
+    const nextExam = upcomingExams[0];
+    const examDate = new Date(nextExam.date);
+    const now = new Date();
+    const diff = examDate - now;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    
+    document.getElementById('examSubject').textContent = nextExam.subject;
+    document.getElementById('examDate').textContent = formatDate(examDate);
+    
+    if (days > 0) {
+        document.getElementById('examTimeRemaining').textContent = `${days} días`;
+    } else if (hours > 0) {
+        document.getElementById('examTimeRemaining').textContent = `${hours} horas`;
+    } else {
+        document.getElementById('examTimeRemaining').textContent = '¡Hoy!';
+    }
+    
+    const urgencyEl = document.getElementById('examUrgency');
+    if (days < 3) {
+        urgencyEl.textContent = '¡URGENTE!';
+        urgencyEl.className = 'exam-urgency urgent';
+    } else if (days < 7) {
+        urgencyEl.textContent = 'Próximamente';
+        urgencyEl.className = 'exam-urgency soon';
+    } else {
+        urgencyEl.textContent = 'Tiempo suficiente';
+        urgencyEl.className = 'exam-urgency normal';
+    }
+}
+
+function updateDateDisplay() {
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const dateStr = now.toLocaleDateString('es-ES', options);
+    document.getElementById('dateDisplay').textContent = dateStr;
+}
+
+function renderExamsList() {
+    const exams = getExams().sort((a, b) => new Date(a.date) - new Date(b.date));
+    const container = document.getElementById('examsList');
+    
+    if (exams.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No hay exámenes programados. ¡Añade tu primer examen!</p>';
+        return;
+    }
+    
+    container.innerHTML = exams.map((exam, index) => {
+        const examDate = new Date(exam.date);
+        const now = new Date();
+        const isPast = examDate < now;
+        const diff = examDate - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        
+        return `
+            <div class="stat-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: ${isPast ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)'}; border-radius: 12px; margin-bottom: 0.5rem;">
+                <div>
+                    <div style="font-weight: 600; ${isPast ? 'text-decoration: line-through; opacity: 0.5;' : ''}">${exam.subject}</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">${formatDate(examDate)}</div>
+                    ${!isPast ? `<div style="font-size: 0.75rem; color: var(--accent); margin-top: 0.25rem;">En ${days} días</div>` : '<div style="font-size: 0.75rem; color: var(--text-secondary);">Completado</div>'}
+                </div>
+                <button onclick="deleteExam(${index})" class="card-action" style="color: var(--danger);">🗑️</button>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderSubjectsList() {
+    const subjects = getSubjects();
+    const container = document.getElementById('subjectsList');
+    
+    if (subjects.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No hay materias aún. ¡Añade tu primera materia!</p>';
+        updateTimerSubjectSelect();
+        return;
+    }
+    
+    container.innerHTML = subjects.map((subject, index) => `
+        <div class="stat-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 0.5rem; border-left: 4px solid ${subject.color};">
+            <div>
+                <div style="font-weight: 600;">${subject.name}</div>
+            </div>
+            <button onclick="deleteSubject(${index})" class="card-action" style="color: var(--danger);">🗑️</button>
+        </div>
+    `).join('');
+    
+    updateTaskSubjectDropdown();
+    updateTimerSubjectSelect();
+}
+
+function renderTasksList() {
+    const tasks = getTasks().sort((a, b) => {
+        if (a.completed !== b.completed) return a.completed ? 1 : -1;
+        return new Date(a.dueDate) - new Date(b.dueDate);
+    });
+    const container = document.getElementById('tasksList');
+    
+    if (tasks.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No hay tareas pendientes. ¡Añade tu primera tarea!</p>';
+        return;
+    }
+    
+    container.innerHTML = tasks.map((task, index) => {
+        const dueDate = new Date(task.dueDate);
+        const now = new Date();
+        const isOverdue = dueDate < now && !task.completed;
+        const subjects = getSubjects();
+        const subject = subjects.find(s => s.name === task.subject);
+        
+        const priorityColors = {
+            low: 'var(--success)',
+            medium: 'var(--warning)',
+            high: 'var(--danger)'
+        };
+        
+        return `
+            <div class="stat-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 0.5rem; ${task.completed ? 'opacity: 0.5;' : ''} border-left: 4px solid ${priorityColors[task.priority]};">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${index})" style="width: 18px; height: 18px; cursor: pointer;">
+                        <div style="font-weight: 600; ${task.completed ? 'text-decoration: line-through;' : ''}">${task.title}</div>
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 1.5rem;">
+                        ${task.subject ? `📖 ${task.subject} • ` : ''}${formatDate(dueDate)}
+                        ${isOverdue ? '<span style="color: var(--danger); font-weight: 600;"> • ¡Atrasada!</span>' : ''}
+                    </div>
+                </div>
+                <button onclick="deleteTask(${index})" class="card-action" style="color: var(--danger);">🗑️</button>
+            </div>
+        `;
+    }).join('');
+}
+
+function updateTimerSubjectSelect() {
+    const subjects = getSubjects();
+    const dropdown = document.getElementById('timerSubjectSelect');
+    if (dropdown) {
+        dropdown.innerHTML = '<option value="">Sin materia</option>' + 
+            subjects.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+    }
+}
+
+function updateTaskSubjectDropdown() {
+    const subjects = getSubjects();
+    const dropdown = document.getElementById('taskSubjectInput');
+    dropdown.innerHTML = '<option value="">Sin materia</option>' + 
+        subjects.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+}
+
+// ==================== MODAL MANAGEMENT ====================
+function openModal(modalId) {
+    document.getElementById(modalId).classList.add('show');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('show');
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+        }
+    });
+});
+
+// ==================== EXAM MANAGEMENT ====================
+document.getElementById('addExamBtn').addEventListener('click', () => openModal('examModal'));
+document.getElementById('configExamBtn').addEventListener('click', () => openModal('examModal'));
+document.getElementById('cancelExamBtn').addEventListener('click', () => closeModal('examModal'));
+
+document.getElementById('saveExamBtn').addEventListener('click', () => {
+    const subject = document.getElementById('examSubjectInput').value.trim();
+    const date = document.getElementById('examDateInput').value;
+    
+    if (!subject || !date) {
+        showToast('Por favor completa todos los campos', 'error');
+        return;
+    }
+    
+    const exams = getExams();
+    exams.push({ subject, date, id: Date.now() });
+    saveExams(exams);
+    
+    document.getElementById('examSubjectInput').value = '';
+    document.getElementById('examDateInput').value = '';
+    closeModal('examModal');
+    
+    renderExamsList();
+    updateExamCountdown();
+    updateProfileStats();
+    showToast('Examen añadido correctamente');
+});
+
+function deleteExam(index) {
+    if (!confirm('¿Eliminar este examen?')) return;
+    
+    const exams = getExams();
+    exams.splice(index, 1);
+    saveExams(exams);
+    
+    renderExamsList();
+    updateExamCountdown();
+    updateProfileStats();
+    showToast('Examen eliminado');
+}
+
+// ==================== SUBJECT MANAGEMENT ====================
+document.getElementById('addSubjectBtn').addEventListener('click', () => openModal('subjectModal'));
+document.getElementById('cancelSubjectBtn').addEventListener('click', () => closeModal('subjectModal'));
+
+document.getElementById('saveSubjectBtn').addEventListener('click', () => {
+    const name = document.getElementById('subjectNameInput').value.trim();
+    const color = document.getElementById('subjectColorInput').value;
+    
+    if (!name) {
+        showToast('Por favor ingresa un nombre', 'error');
+        return;
+    }
+    
+    const subjects = getSubjects();
+    subjects.push({ name, color, id: Date.now() });
+    saveSubjects(subjects);
+    
+    document.getElementById('subjectNameInput').value = '';
+    document.getElementById('subjectColorInput').value = '#6c63ff';
+    closeModal('subjectModal');
+    
+    renderSubjectsList();
+    showToast('Materia añadida correctamente');
+});
+
+function deleteSubject(index) {
+    if (!confirm('¿Eliminar esta materia?')) return;
+    
+    const subjects = getSubjects();
+    subjects.splice(index, 1);
+    saveSubjects(subjects);
+    
+    renderSubjectsList();
+    showToast('Materia eliminada');
+}
+
+// ==================== TASK MANAGEMENT ====================
+document.getElementById('addTaskBtn').addEventListener('click', () => openModal('taskModal'));
+document.getElementById('cancelTaskBtn').addEventListener('click', () => closeModal('taskModal'));
+
+document.getElementById('saveTaskBtn').addEventListener('click', () => {
+    const title = document.getElementById('taskTitleInput').value.trim();
+    const subject = document.getElementById('taskSubjectInput').value;
+    const dueDate = document.getElementById('taskDueInput').value;
+    const priority = document.getElementById('taskPriorityInput').value;
+    
+    if (!title || !dueDate) {
+        showToast('Por favor completa título y fecha', 'error');
+        return;
+    }
+    
+    const tasks = getTasks();
+    tasks.push({ title, subject, dueDate, priority, completed: false, id: Date.now() });
+    saveTasks(tasks);
+    
+    document.getElementById('taskTitleInput').value = '';
+    document.getElementById('taskSubjectInput').value = '';
+    document.getElementById('taskDueInput').value = '';
+    document.getElementById('taskPriorityInput').value = 'medium';
+    closeModal('taskModal');
+    
+    renderTasksList();
+    showToast('Tarea añadida correctamente');
+});
+
+function toggleTask(index) {
+    const tasks = getTasks();
+    tasks[index].completed = !tasks[index].completed;
+    saveTasks(tasks);
+    renderTasksList();
+}
+
+function deleteTask(index) {
+    if (!confirm('¿Eliminar esta tarea?')) return;
+    
+    const tasks = getTasks();
+    tasks.splice(index, 1);
+    saveTasks(tasks);
+    
+    renderTasksList();
+    showToast('Tarea eliminada');
+}
+
+// ==================== PROFILE MANAGEMENT ====================
+function loadProfileData() {
+    const profile = getProfile();
+    
+    document.getElementById('profileName').value = profile.name;
+    document.getElementById('profileEmail').value = profile.email;
+    document.getElementById('profileUniversity').value = profile.university;
+    document.getElementById('profileCareer').value = profile.career;
+    document.getElementById('profileAvatar').textContent = profile.initials;
+    document.getElementById('profileDisplayName').textContent = profile.name;
+    
+    document.querySelector('.user-avatar').textContent = profile.initials;
+    document.querySelector('.user-name').textContent = profile.name;
+}
+
+document.getElementById('profileForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const name = document.getElementById('profileName').value.trim();
+    const email = document.getElementById('profileEmail').value.trim();
+    const university = document.getElementById('profileUniversity').value.trim();
+    const career = document.getElementById('profileCareer').value.trim();
+    
+    if (!name) {
+        showToast('El nombre es requerido', 'error');
+        return;
+    }
+    
+    const profile = {
+        name,
+        email,
+        university,
+        career,
+        initials: getInitials(name)
+    };
+    
+    saveProfile(profile);
+    loadProfileData();
+    showToast('Perfil actualizado correctamente');
+});
+
+document.getElementById('cancelProfileBtn').addEventListener('click', () => {
+    loadProfileData();
+    showToast('Cambios descartados');
+});
+
+// ==================== BUG REPORT ====================
+document.getElementById('reportBugBtn').addEventListener('click', () => openModal('bugModal'));
+document.getElementById('cancelBugBtn').addEventListener('click', () => closeModal('bugModal'));
+
+document.getElementById('sendBugBtn').addEventListener('click', () => {
+    const description = document.getElementById('bugDescriptionInput').value.trim();
+    
+    if (!description) {
+        showToast('Por favor describe el problema', 'error');
+        return;
+    }
+    
+    // In a real app, this would send to a backend
+    console.log('Bug Report:', description);
+    
+    document.getElementById('bugDescriptionInput').value = '';
+    closeModal('bugModal');
+    showToast('¡Gracias por tu reporte! Lo revisaremos pronto.');
+});
+
+// ==================== FACTORY RESET ====================
+document.getElementById('resetAllBtn').addEventListener('click', () => openModal('resetModal'));
+document.getElementById('cancelResetBtn').addEventListener('click', () => closeModal('resetModal'));
+
+document.getElementById('confirmResetBtn').addEventListener('click', () => {
+    // Clear all localStorage
+    Object.values(STORAGE).forEach(key => localStorage.removeItem(key));
+    
+    closeModal('resetModal');
+    showToast('Datos restaurados de fábrica. Recargando...');
+    
+    setTimeout(() => {
+        location.reload();
+    }, 1500);
+});
+
+// ==================== GOAL MANAGEMENT ====================
+document.getElementById('editGoalBtn').addEventListener('click', () => {
+    document.getElementById('goalInput').value = getWeeklyGoal();
+    openModal('goalModal');
+});
+
+document.getElementById('cancelGoalBtn').addEventListener('click', () => closeModal('goalModal'));
+
+document.getElementById('confirmGoalBtn').addEventListener('click', () => {
+    const goal = parseInt(document.getElementById('goalInput').value);
+    
+    if (!goal || goal < 1 || goal > 168) {
+        showToast('Ingresa un valor entre 1 y 168 horas', 'error');
+        return;
+    }
+    
+    setWeeklyGoal(goal);
+    updateVelocimeter();
+    closeModal('goalModal');
+    showToast('Meta semanal actualizada');
+});
+
+document.getElementById('resetWeekBtn').addEventListener('click', () => {
+    if (!confirm('¿Reiniciar el contador de esta semana?')) return;
+    
+    setWeeklyHours(0);
+    updateVelocimeter();
+    showToast('Contador semanal reiniciado');
+});
+
+// ==================== TIMER ====================
+let timerInterval = null;
+let remainingSeconds = 0;
+let isRunning = false;
+let timerMode = 'custom';
+let timerStartTime = 0;
+
+const timerDisplay = document.getElementById('timerDisplay');
+const playBtn = document.getElementById('playBtn');
+const stopBtn = document.getElementById('stopBtn');
+const customModeBtn = document.getElementById('customModeBtn');
+const pomodoroModeBtn = document.getElementById('pomodoroModeBtn');
+const customMinutes = document.getElementById('customMinutes');
+
+function formatTime(seconds) {
+    const mins = Math.floor(Math.abs(seconds) / 60);
+    const secs = Math.abs(seconds) % 60;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+function updateTimerDisplay() {
+    timerDisplay.textContent = formatTime(remainingSeconds);
+}
+
+function playNotificationSound() {
+    try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+    } catch (e) {
+        console.log('Audio not supported');
+    }
+}
+
+function startTimer() {
+    if (isRunning) return;
+    
+    if (remainingSeconds === 0) {
+        const minutes = timerMode === 'pomodoro' ? 25 : parseInt(customMinutes.value) || 25;
+        
+        if (minutes < 1 || minutes > 180) {
+            showToast('Ingresa un valor entre 1 y 180 minutos', 'error');
+            return;
+        }
+        
+        remainingSeconds = minutes * 60;
+        timerStartTime = minutes * 60;
+    }
+    
+    isRunning = true;
+    playBtn.textContent = '⏸ Pausar';
+    playBtn.classList.remove('play');
+    playBtn.classList.add('pause');
+    timerDisplay.classList.add('pulse');
+    customMinutes.disabled = true;
+    document.getElementById('timerSubjectSelect').disabled = true;
+    
+    timerInterval = setInterval(() => {
+        if (remainingSeconds > 0) {
+            remainingSeconds--;
+            updateTimerDisplay();
+        } else {
+            stopTimer();
+            const minutesStudied = timerStartTime / 60;
+            const hours = minutesStudied / 60;
+            
+            // Obtener materia seleccionada
+            const selectedSubject = document.getElementById('timerSubjectSelect').value;
+            
+            // Guardar sesión con materia
+            const session = {
+                id: Date.now(),
+                duration: minutesStudied,
+                hours: hours,
+                date: new Date().toISOString(),
+                subject: selectedSubject || null
+            };
+            
+            // Agregar a historial de sesiones
+            const sessions = JSON.parse(localStorage.getItem('learnit_sessions') || '[]');
+            sessions.push(session);
+            localStorage.setItem('learnit_sessions', JSON.stringify(sessions));
+            
+            // Add to weekly and total hours
+            const newWeekly = getWeeklyHours() + hours;
+            setWeeklyHours(newWeekly);
+            addToTotalHours(hours);
+            
+            // Add to history
+            addStudySession(hours);
+            
+            // Update sessions
+            incrementTodaySessions();
+            incrementTotalSessions();
+            
+            // Update streak
+            updateStreak();
+            
+            // Update UI
+            updateVelocimeter();
+            updateStats();
+            updateProfileStats();
+            
+            playNotificationSound();
+            showToast(`¡Sesión completada! +${hours.toFixed(2)}h agregadas`);
+        }
+    }, 1000);
+}
+
+function pauseTimer() {
+    isRunning = false;
+    clearInterval(timerInterval);
+    playBtn.textContent = '▶ Continuar';
+    playBtn.classList.remove('pause');
+    playBtn.classList.add('play');
+    timerDisplay.classList.remove('pulse');
+}
+
+function stopTimer() {
+    isRunning = false;
+    clearInterval(timerInterval);
+    remainingSeconds = 0;
+    timerStartTime = 0;
+    updateTimerDisplay();
+    playBtn.textContent = '▶ Iniciar';
+    playBtn.classList.remove('pause');
+    playBtn.classList.add('play');
+    timerDisplay.classList.remove('pulse');
+    customMinutes.disabled = false;
+    document.getElementById('timerSubjectSelect').disabled = false;
+}
+
+playBtn.addEventListener('click', () => {
+    if (isRunning) {
+        pauseTimer();
+    } else {
+        startTimer();
+    }
+});
+
+stopBtn.addEventListener('click', () => {
+    if (isRunning || remainingSeconds > 0) {
+        if (confirm('¿Detener el temporizador? El progreso no se guardará.')) {
+            stopTimer();
+        }
+    }
+});
+
+customModeBtn.addEventListener('click', () => {
+    if (isRunning) {
+        showToast('Detén el temporizador antes de cambiar de modo', 'error');
+        return;
+    }
+    timerMode = 'custom';
+    customModeBtn.classList.add('active');
+    pomodoroModeBtn.classList.remove('active');
+    customMinutes.disabled = false;
+    remainingSeconds = 0;
+    updateTimerDisplay();
+});
+
+pomodoroModeBtn.addEventListener('click', () => {
+    if (isRunning) {
+        showToast('Detén el temporizador antes de cambiar de modo', 'error');
+        return;
+    }
+    timerMode = 'pomodoro';
+    pomodoroModeBtn.classList.add('active');
+    customModeBtn.classList.remove('active');
+    customMinutes.disabled = true;
+    customMinutes.value = 25;
+    remainingSeconds = 0;
+    updateTimerDisplay();
+});
+
+customMinutes.addEventListener('input', () => {
+    const value = parseInt(customMinutes.value);
+    if (value < 1) customMinutes.value = 1;
+    if (value > 180) customMinutes.value = 180;
+});
+
+// ==================== THEME TOGGLE ====================
+const themeToggle = document.getElementById('themeToggle');
+const root = document.documentElement;
+
+function loadTheme() {
+    const savedTheme = localStorage.getItem(STORAGE.THEME) || 'dark';
+    if (savedTheme === 'light') {
+        root.classList.add('light-mode');
+        themeToggle.textContent = '🌙';
+    } else {
+        root.classList.remove('light-mode');
+        themeToggle.textContent = '💡';
+    }
+}
+
+themeToggle.addEventListener('click', () => {
+    if (root.classList.contains('light-mode')) {
+        root.classList.remove('light-mode');
+        localStorage.setItem(STORAGE.THEME, 'dark');
+        themeToggle.textContent = '💡';
+        showToast('Modo oscuro activado');
+    } else {
+        root.classList.add('light-mode');
+        localStorage.setItem(STORAGE.THEME, 'light');
+        themeToggle.textContent = '🌙';
+        showToast('Modo claro activado');
+    }
+});
+
+// ==================== SIDEBAR ====================
+const collapseBtn = document.getElementById('collapseBtn');
+const sidebar = document.getElementById('sidebar');
+
+function loadSidebarState() {
+    const collapsed = localStorage.getItem(STORAGE.SIDEBAR_COLLAPSED) === 'true';
+    if (collapsed) {
+        sidebar.classList.add('collapsed');
+    }
+}
+
+collapseBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+    const isCollapsed = sidebar.classList.contains('collapsed');
+    localStorage.setItem(STORAGE.SIDEBAR_COLLAPSED, isCollapsed);
+});
+
+// ==================== SPA NAVIGATION ====================
+function navigateToSection(sectionId) {
+    document.querySelectorAll('.spa-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.classList.add('active');
+    }
+    
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    const activeMenuItem = document.querySelector(`[data-section="${sectionId}"]`);
+    if (activeMenuItem) {
+        activeMenuItem.classList.add('active');
+    }
+    
+    if (window.innerWidth <= 768) {
+        sidebar.classList.remove('mobile-open');
+        document.getElementById('sidebarOverlay').classList.remove('show');
+    }
+}
+
+document.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', function() {
+        const sectionId = this.getAttribute('data-section');
+        navigateToSection(sectionId);
+    });
+});
+
+// ==================== MOBILE MENU ====================
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+mobileMenuBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('mobile-open');
+    sidebarOverlay.classList.toggle('show');
+});
+
+sidebarOverlay.addEventListener('click', () => {
+    sidebar.classList.remove('mobile-open');
+    sidebarOverlay.classList.remove('show');
+});
+
+// ==================== KEYBOARD SHORTCUTS ====================
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        if (isRunning) {
+            pauseTimer();
+        } else {
+            startTimer();
+        }
+    }
+    
+    if (e.code === 'Escape') {
+        document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
+        if (window.innerWidth <= 768) {
+            sidebar.classList.remove('mobile-open');
+            sidebarOverlay.classList.remove('show');
+        }
+    }
+});
+
+// ==================== PREVENT DATA LOSS ====================
+window.addEventListener('beforeunload', (e) => {
+    if (isRunning) {
+        e.preventDefault();
+        e.returnValue = '¿Seguro que quieres salir? El temporizador está en marcha.';
+    }
+});
+
+// ==================== INITIALIZATION ====================
+document.addEventListener('DOMContentLoaded', () => {
+    loadTheme();
+    loadSidebarState();
+    loadProfileData();
+    updateVelocimeter();
+    updateStats();
+    updateProfileStats();
+    updateTimerDisplay();
+    updateDateDisplay();
+    updateExamCountdown();
+    updateStreak();
+    renderExamsList();
+    renderSubjectsList();
+    renderTasksList();
+    updateTimerSubjectSelect();
+    
+    setInterval(updateDateDisplay, 60000);
+    setInterval(updateExamCountdown, 3600000);
+});
+</script>
+</body>
+</html>

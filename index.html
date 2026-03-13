@@ -207,6 +207,9 @@
         .btn-google:hover {
             transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
+        .btn-google:disabled {
+            opacity: 0.7; cursor: not-allowed; transform: none;
+        }
         .btn-guest {
             background: linear-gradient(135deg, var(--accent), #5a52d5); color: white; box-shadow: 0 4px 20px rgba(108, 99, 255, 0.3);
         }
@@ -217,6 +220,33 @@
             display: block; text-align: center; font-size: 0.85rem; margin-top: 1.5rem; text-decoration: none; transition: opacity 0.3s ease;
         }
         .admin-link:hover { opacity: 0.7; }
+
+        /* ===== FIREBASE STATUS ===== */
+        .firebase-status {
+            font-size: 0.75rem;
+            text-align: center;
+            margin-top: -0.5rem;
+            margin-bottom: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            display: none;
+        }
+        .firebase-status.loading {
+            display: block;
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--accent);
+        }
+        .firebase-status.error {
+            display: block;
+            background: rgba(255, 107, 157, 0.1);
+            color: #ff6b9d;
+        }
+        .firebase-status.not-configured {
+            display: block;
+            background: rgba(255, 211, 61, 0.15);
+            color: #ffd93d;
+        }
+
         /* ===== ILUSTRACIÓN ===== */
         .illustration {
             flex: 1; display: flex; justify-content: center; align-items: center; padding: 3rem 2rem; position: relative;
@@ -230,12 +260,11 @@
         .description {
             font-size: 1rem; opacity: 0.8; max-width: 600px; margin: 0 auto; line-height: 1.6;
         }
-        /* ===== BOTÓN FLOTANTE DE SOPORTE (ARRASTRABLE) ===== */
+        /* ===== BOTÓN FLOTANTE DE SOPORTE ===== */
         .support-btn {
             position: fixed; bottom: 6rem; right: 2rem; background-color: var(--accent); color: white; padding: 1rem 1.5rem; border-radius: 50px; display: flex; align-items: center; gap: 0.6rem; text-decoration: none; font-weight: 600; box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4); transition: box-shadow 0.3s ease, transform 0.1s ease; z-index: 1000; cursor: pointer; user-select: none;
         }
         .support-btn:hover { box-shadow: 0 6px 25px rgba(108, 99, 255, 0.6); }
-        .support-btn.dragging { cursor: grabbing !important; transform: scale(1.05); box-shadow: 0 8px 30px rgba(108, 99, 255, 0.7); }
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .login-wrapper { flex-direction: column; gap: 0; border-radius: 25px; }
@@ -292,7 +321,8 @@
             <div class="container">
                 <div class="login-content">
                     <h2 data-translate="welcome">Welcome</h2>
-                    <button class="button btn-google">
+
+                    <button class="button btn-google" id="googleLoginBtn">
                         <svg width="20" height="20" viewBox="0 0 24 24">
                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -301,7 +331,9 @@
                         </svg>
                         <span data-translate="loginGoogle">Log in with Google</span>
                     </button>
-                    <button class="button btn-guest">
+                    <div class="firebase-status" id="firebaseStatus"></div>
+
+                    <button class="button btn-guest" id="guestBtn">
                         <span data-translate="continueGuest">Continue as a guest</span>
                     </button>
                     <a href="#" class="admin-link" data-translate="adminLogin">Login as administrator</a>
@@ -337,7 +369,7 @@
             Learn it is a platform that allows you to structure your studies and learning online in a simple way
         </p>
     </footer>
-    <a href="mailto:support@learnit.com" class="support-btn" id="supportBtn">
+    <a href="/cdn-cgi/l/email-protection#cfbcbabfbfa0bdbb8fa3aaaebda1a6bbe1aca0a2" class="support-btn" id="supportBtn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
             <polyline points="22,6 12,13 2,6"/>
@@ -345,8 +377,99 @@
         <span data-translate="support">Support</span>
     </a>
 
+    <!-- ============================================================
+         FIREBASE SDK
+         ============================================================ -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged }
+            from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        // ============================================================
+        // 🔧 CONFIGURACIÓN FIREBASE
+        // Sustituye estos valores por los de tu proyecto en Firebase Console
+        // (Configuración del proyecto → Tu aplicación → firebaseConfig)
+        // ============================================================
+        const firebaseConfig = {
+            apiKey:            "AIzaSyAsB4wXWkCFDuA2trB70ANwZJfp4ZZI9Kw",
+            authDomain:        "learn-it-8cece.firebaseapp.com",
+            projectId:         "learn-it-8cece",
+            storageBucket:     "learn-it-8cece.firebasestorage.app",
+            messagingSenderId: "209541542824",
+            appId:             "1:209541542824:web:6abd2d7bedf64d5fbd639d"
+        };
+        // ============================================================
+
+        const FIREBASE_CONFIGURED = firebaseConfig.apiKey !== "AIzaSyAsB4wXWkCFDuA2trB70ANwZJfp4ZZI9Kw";
+
+        let auth = null;
+
+        if (FIREBASE_CONFIGURED) {
+            try {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+
+                // Si el usuario ya tiene sesión iniciada → ir al dashboard directamente
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        // Guardar info del usuario y redirigir
+                        localStorage.setItem('learnit_auth_mode', 'google');
+                        localStorage.setItem('learnit_firebase_user', JSON.stringify({
+                            uid:    user.uid,
+                            name:   user.displayName || 'Usuario',
+                            email:  user.email || '',
+                            photo:  user.photoURL || ''
+                        }));
+                        window.location.href = 'dashboard.html';
+                    }
+                });
+            } catch (e) {
+                console.error('Firebase init error:', e);
+                showFirebaseStatus('error', '⚠️ Error al iniciar Firebase. Revisa la configuración.');
+            }
+        } else {
+            // Firebase no configurado aún → mostrar aviso en el botón de Google
+            showFirebaseStatus('not-configured',
+                '⚙️ Firebase no configurado. El login con Google estará disponible próximamente.');
+            document.getElementById('googleLoginBtn').disabled = true;
+        }
+
+        // ===== LOGIN CON GOOGLE =====
+        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+            if (!FIREBASE_CONFIGURED || !auth) return;
+
+            showFirebaseStatus('loading', '🔄 Conectando con Google...');
+            document.getElementById('googleLoginBtn').disabled = true;
+
+            try {
+                const provider = new GoogleAuthProvider();
+                await signInWithPopup(auth, provider);
+                // onAuthStateChanged se encarga de la redirección
+            } catch (error) {
+                document.getElementById('googleLoginBtn').disabled = false;
+                if (error.code === 'auth/popup-closed-by-user') {
+                    showFirebaseStatus('', '');
+                } else {
+                    showFirebaseStatus('error', '❌ No se pudo iniciar sesión. Inténtalo de nuevo.');
+                }
+            }
+        });
+
+        function showFirebaseStatus(type, message) {
+            const el = document.getElementById('firebaseStatus');
+            el.className = 'firebase-status ' + type;
+            el.textContent = message;
+        }
+
+        // Exponer para el script clásico de abajo
+        window.__firebaseConfigured = FIREBASE_CONFIGURED;
+    </script>
+
+    <!-- ============================================================
+         SCRIPT CLÁSICO (traducciones, tema, invitado)
+         ============================================================ -->
     <script>
-        // --- CÓDIGO DE TRADUCCIÓN AÑADIDO ---
+        // ===== TRADUCCIONES =====
         const translations = {
             en: {
                 subtitle: "Your learning platform",
@@ -401,67 +524,41 @@
         langOptions.forEach(option => {
             option.addEventListener('click', () => {
                 const lang = option.getAttribute('data-lang');
-                
-                // Cambiar el texto del botón principal
                 currentLangDisplay.textContent = lang.toUpperCase();
-                
-                // Actualizar clases activas en el menú
                 langOptions.forEach(opt => opt.classList.remove('active'));
                 option.classList.add('active');
-
-                // Traducir todos los elementos con [data-translate]
                 document.querySelectorAll('[data-translate]').forEach(el => {
                     const key = el.getAttribute('data-translate');
-                    if (translations[lang][key]) {
+                    if (translations[lang] && translations[lang][key]) {
                         el.textContent = translations[lang][key];
                     }
                 });
             });
         });
-        // --- FIN CÓDIGO DE TRADUCCIÓN ---
 
-        // ===== GESTIÓN DEL TEMA (TU CÓDIGO ORIGINAL) =====
+        // ===== TEMA =====
         const themeToggleWrapper = document.getElementById('themeToggleWrapper');
-        const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
-        const savedTheme = localStorage.getItem('theme') || 'dark';
+        const savedTheme = localStorage.getItem('learnit_theme') || 'dark';
         body.className = `${savedTheme}-mode`;
 
         themeToggleWrapper.addEventListener('click', () => {
             if (body.classList.contains('dark-mode')) {
-                body.classList.remove('dark-mode');
-                body.classList.add('light-mode');
-                localStorage.setItem('theme', 'light');
+                body.classList.replace('dark-mode', 'light-mode');
+                localStorage.setItem('learnit_theme', 'light');
             } else {
-                body.classList.remove('light-mode');
-                body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
+                body.classList.replace('light-mode', 'dark-mode');
+                localStorage.setItem('learnit_theme', 'dark');
             }
         });
 
-        const buttons = document.querySelectorAll('.button');
-        buttons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.target.style.transform = 'scale(0.98)';
-                setTimeout(() => { e.target.style.transform = ''; }, 100);
-            });
+        // ===== CONTINUAR COMO INVITADO =====
+        document.getElementById('guestBtn').addEventListener('click', () => {
+            localStorage.setItem('learnit_auth_mode', 'guest');
+            // Limpiar cualquier sesión de Firebase previa
+            localStorage.removeItem('learnit_firebase_user');
+            window.location.href = 'dashboard.html';
         });
 
-        document.querySelector('.admin-link').addEventListener('click', (e) => {
-            e.preventDefault();
-        });
-    </script>
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const guestBtn = document.querySelector('.btn-guest');
-
-        if (guestBtn) {
-            guestBtn.addEventListener('click', () => {
-                localStorage.setItem('userMode', 'guest'); // opcional
-                window.location.href = 'dashboard.html';
-            });
-        }
-    });
-</script>
-</body>
-</html>
+        // ===== ADMIN LINK =====
+     

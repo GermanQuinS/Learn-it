@@ -111,20 +111,22 @@
             position: absolute;
             top: calc(100% + 0.5rem);
             left: 0;
-            background: var(--container-dark);
+            background: #2d2d44;
+            border: 1px solid rgba(108,99,255,0.3);
             border-radius: 10px;
             padding: 0.5rem;
-            min-width: 120px;
+            min-width: 140px;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s ease;
-            z-index: 100;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.55);
         }
         body.light-mode .language-dropdown {
-            background: var(--container-light);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            background: #ffffff;
+            border-color: rgba(108,99,255,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
         .language-selector:hover .language-dropdown {
             opacity: 1;
@@ -140,7 +142,9 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            color: #e0e0f0;
         }
+        body.light-mode .language-option { color: #1a1a2e; }
         .language-option:hover {
             background: rgba(108, 99, 255, 0.15);
         }
@@ -564,7 +568,7 @@
         }
 
         function getAdminPassword() {
-            return localStorage.getItem('learnit_admin_pwd') || 'learnit-admin-2024';
+            return localStorage.getItem('learnit_admin_pwd') || '2112';
         }
 
         document.getElementById('adminLoginBtn').addEventListener('click', () => {
@@ -591,7 +595,7 @@
     </script>
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Fix: Google login button - navigate to dashboard as google user
+        // Google login
         const googleBtn = document.querySelector('.btn-google');
         if (googleBtn) {
             googleBtn.addEventListener('click', () => {
@@ -600,8 +604,7 @@
                 window.location.href = 'dashboard.html';
             });
         }
-
-        // Fix: Guest button - navigate to dashboard as guest
+        // Guest login
         const guestBtn = document.querySelector('.btn-guest');
         if (guestBtn) {
             guestBtn.addEventListener('click', () => {

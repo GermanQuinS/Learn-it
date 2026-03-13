@@ -591,8 +591,38 @@
     </script>
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const guestBtn = document.querySelector('.btn-guest');
+        // Fix: Google login button - navigate to dashboard as google user
+        const googleBtn = document.querySelector('.btn-google');
+        if (googleBtn) {
+            googleBtn.addEventListener('click', () => {
+                localStorage.setItem('learnit_user_type', 'google');
+                localStorage.setItem('learnit_logged_in', 'true');
+                window.location.href = 'dashboard.html';
+            });
+        }
 
+        // Fix: Guest button - navigate to dashboard as guest
+        const guestBtn = document.querySelector('.btn-guest');
         if (guestBtn) {
             guestBtn.addEventListener('click', () => {
-                localStorage.setItem('
+                localStorage.setItem('learnit_user_type', 'guest');
+                localStorage.setItem('learnit_logged_in', 'true');
+                window.location.href = 'dashboard.html';
+            });
+        }
+    });
+    </script>
+    <!-- Admin Modal -->
+    <div class="admin-modal-overlay" id="adminModalOverlay">
+        <div class="admin-modal-box">
+            <div class="admin-modal-icon">🛡️</div>
+            <div class="admin-modal-title">Acceso Administrador</div>
+            <div class="admin-modal-subtitle">Introduce la contraseña de administrador</div>
+            <input type="password" class="admin-pwd-input" id="adminPasswordInput" placeholder="Contraseña">
+            <div class="admin-error" id="adminError">Contraseña incorrecta. Inténtalo de nuevo.</div>
+            <button class="admin-login-btn" id="adminLoginBtn">Entrar</button>
+            <button class="admin-cancel-btn" onclick="closeAdminModal()">Cancelar</button>
+        </div>
+    </div>
+</body>
+</html>

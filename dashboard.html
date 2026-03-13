@@ -952,6 +952,18 @@
             border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
         }
+        select.modal-input, select.modal-input option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+        :root.light-mode select.modal-input, :root.light-mode select.modal-input option {
+            background: #ffffff;
+            color: #2d3748;
+        }
+        select{background:#1a1a2e!important;color:#e8e8f0!important}
+        select option{background:#1a1a2e!important;color:#e8e8f0!important}
+        :root.light-mode select{background:#fff!important;color:#1a1a2e!important}
+        :root.light-mode select option{background:#fff!important;color:#1a1a2e!important}
 
         .modal-footer {
             display: flex;
@@ -1779,84 +1791,79 @@
         }
         .topbar-right { position: relative; }
 
-        /* ==================== LANGUAGE SELECTOR ==================== */
-        .lang-selector {
-            position: relative;
-        }
+        /* ── Language selector ── */
+        .lang-selector { position: relative; }
         .lang-btn {
-            background: rgba(108, 99, 255, 0.1);
-            border: 1px solid rgba(108, 99, 255, 0.2);
+            background: rgba(108,99,255,0.1);
+            border: 1px solid rgba(108,99,255,0.25);
             border-radius: 8px;
-            padding: 0.4rem 0.7rem;
-            font-size: 0.75rem;
+            padding: 0 0.8rem;
+            height: 40px;
+            font-size: 0.8rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 0.3rem;
-            transition: all 0.3s ease;
             color: var(--text-primary);
-            font-weight: 500;
-            height: 40px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: background 0.2s;
         }
-        .lang-btn:hover {
-            background: rgba(108, 99, 255, 0.2);
-            border-color: rgba(108, 99, 255, 0.4);
-        }
+        .lang-btn:hover { background: rgba(108,99,255,0.2); }
         .lang-dropdown {
             position: absolute;
-            top: calc(100% + 0.5rem);
+            top: calc(100% + 6px);
             right: 0;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: #1e1e35;
+            border: 1px solid rgba(108,99,255,0.35);
             border-radius: 10px;
-            padding: 0.5rem;
-            min-width: 130px;
+            padding: 0.4rem;
+            min-width: 148px;
             opacity: 0;
             visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            z-index: 200;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            transform: translateY(-6px);
+            transition: all 0.25s ease;
+            z-index: 9999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.55);
+        }
+        :root.light-mode .lang-dropdown {
+            background: #ffffff;
+            border-color: rgba(108,99,255,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
         .lang-selector:hover .lang-dropdown {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
-        .lang-option {
-            padding: 0.5rem 0.7rem;
+        .lang-opt {
+            padding: 0.5rem 0.75rem;
             border-radius: 6px;
             cursor: pointer;
-            transition: background 0.2s ease;
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--text-primary);
+            color: #e0e0f0;
+            font-weight: 500;
+            transition: background 0.15s;
         }
-        .lang-option:hover { background: rgba(108, 99, 255, 0.15); }
-        .lang-option.active { background: rgba(108, 99, 255, 0.2); font-weight: 600; }
-
-        /* ==================== LOGOUT BUTTON ==================== */
+        :root.light-mode .lang-opt { color: #2d3748; }
+        .lang-opt:hover { background: rgba(108,99,255,0.18); }
+        .lang-opt.active { background: rgba(108,99,255,0.25); font-weight: 700; }
+        /* ── Logout button ── */
         .logout-btn {
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             border-radius: 50%;
-            background: rgba(255, 107, 157, 0.1);
-            border: 1px solid rgba(255, 107, 157, 0.2);
+            background: rgba(255,107,157,0.1);
+            border: 1px solid rgba(255,107,157,0.25);
             color: var(--danger);
             font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            title: 'Cerrar sesión';
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
         }
-        .logout-btn:hover {
-            background: rgba(255, 107, 157, 0.2);
-            transform: scale(1.05);
-        }
+        .logout-btn:hover { background: rgba(255,107,157,0.22); transform: scale(1.05); }
 
     </style>
 </head>
@@ -1936,19 +1943,18 @@
                         <div id="notifPanelList"><div class="notif-panel-empty">Sin notificaciones</div></div>
                     </div>
                 </div>
-                <!-- Language Selector -->
+                <!-- Language selector -->
                 <div class="lang-selector">
-                    <button class="lang-btn" id="dashLangBtn">🌐 <span id="dashCurrentLang">ES</span></button>
-                    <div class="lang-dropdown" id="dashLangDropdown">
-                        <div class="lang-option" data-lang="es">🇪🇸 Español</div>
-                        <div class="lang-option" data-lang="en">🇬🇧 English</div>
-                        <div class="lang-option" data-lang="gl">🏴 Galego</div>
-                        <div class="lang-option" data-lang="fr">🇫🇷 Français</div>
-                        <div class="lang-option" data-lang="de">🇩🇪 Deutsch</div>
+                    <button class="lang-btn">🌐 <span id="dashLangLabel">ES</span> ▾</button>
+                    <div class="lang-dropdown">
+                        <div class="lang-opt active" data-lang="es">🇪🇸 Español</div>
+                        <div class="lang-opt" data-lang="en">🇬🇧 English</div>
+                        <div class="lang-opt" data-lang="gl">🏴 Galego</div>
+                        <div class="lang-opt" data-lang="fr">🇫🇷 Français</div>
+                        <div class="lang-opt" data-lang="de">🇩🇪 Deutsch</div>
                     </div>
                 </div>
                 <button class="icon-btn" id="themeToggle">💡</button>
-                <!-- Logout Button -->
                 <button class="logout-btn" id="logoutBtn" title="Cerrar sesión">🚪</button>
             </div>
         </header>
@@ -1985,7 +1991,7 @@
 
                         <div class="custom-input" style="margin-top: 1rem;">
                             <label for="timerSubjectSelect">Materia (opcional):</label>
-                            <select id="timerSubjectSelect" style="width: 100%; padding: 0.5rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;">
+                            <select id="timerSubjectSelect" style="width: 100%; padding: 0.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;">
                                 <option value="">Sin materia</option>
                             </select>
                         </div>
@@ -2325,11 +2331,11 @@
                                 <input type="email" class="profile-input" id="profileEmail" value="john.doe@example.com">
                             </div>
                             <div class="profile-form-group">
-                                <label class="profile-label" for="profileUniversity">Centro educativo</label>
+                                <label class="profile-label" for="profileUniversity">Universidad</label>
                                 <input type="text" class="profile-input" id="profileUniversity" value="Universidad Nacional">
                             </div>
                             <div class="profile-form-group">
-                                <label class="profile-label" for="profileCareer">Estudios</label>
+                                <label class="profile-label" for="profileCareer">Carrera</label>
                                 <input type="text" class="profile-input" id="profileCareer" value="Ingeniería Informática">
                             </div>
                             <div class="profile-actions">
@@ -2588,6 +2594,24 @@
         <span class="toast-message" id="toastMessage"></span>
     </div>
 
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, serverTimestamp }
+    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+const _app = initializeApp({apiKey:'AIzaSyAsB4wXWkCFDuA2trB70ANwZJfp4ZZI9Kw',authDomain:'learn-it-8cece.firebaseapp.com',projectId:'learn-it-8cece',storageBucket:'learn-it-8cece.firebasestorage.app',messagingSenderId:'209541542824',appId:'1:209541542824:web:6abd2d7bedf64d5fbd639d'});
+const _db = getFirestore(_app);
+window._db = _db;
+window._fc = {collection,addDoc,onSnapshot,query,orderBy,doc,updateDoc,deleteDoc,serverTimestamp};
+onSnapshot(query(collection(_db,'notifications'),orderBy('date','desc')),function(snap){
+    window._notifs=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    if(window._onNotifs)window._onNotifs();
+});
+onSnapshot(query(collection(_db,'bugs'),orderBy('date','desc')),function(snap){
+    window._bugs=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    if(window._onBugs)window._onBugs();
+});
+</script>
 <script>
 // ==================== STORAGE KEYS ====================
 const STORAGE = {
@@ -3212,21 +3236,19 @@ document.getElementById('cancelProfileBtn').addEventListener('click', () => {
 document.getElementById('reportBugBtn').addEventListener('click', () => openModal('bugModal'));
 document.getElementById('cancelBugBtn').addEventListener('click', () => closeModal('bugModal'));
 
-document.getElementById('sendBugBtn').addEventListener('click', () => {
-    const description = document.getElementById('bugDescriptionInput').value.trim();
-    
-    if (!description) {
-        showToast('Por favor describe el problema', 'error');
-        return;
-    }
-    
-    // In a real app, this would send to a backend
-    console.log('Bug Report:', description);
-    
-    document.getElementById('bugDescriptionInput').value = '';
-    closeModal('bugModal');
-    showToast('¡Gracias por tu reporte! Lo revisaremos pronto.');
-});
+document.getElementById('sendBugBtn').addEventListener('click',async function(){
+    var desc=document.getElementById('bugDescriptionInput').value.trim();
+    if(!desc){showToast('Por favor describe el problema','error');return;}
+    if(!window._db){showToast('Firebase no listo','error');return;}
+    var btn=document.getElementById('sendBugBtn');btn.disabled=true;btn.textContent='Enviando...';
+    try{
+        await window._fc.addDoc(window._fc.collection(window._db,'bugs'),{description:desc,status:'pendiente',date:window._fc.serverTimestamp(),reply:''});
+        document.getElementById('bugDescriptionInput').value='';
+        closeModal('bugModal');
+        showToast('Gracias por tu reporte 🐛');
+    }catch(e){showToast('Error: '+e.message,'error');}
+    btn.disabled=false;btn.textContent='Enviar';
+});;
 
 // ==================== FACTORY RESET ====================
 document.getElementById('resetAllBtn').addEventListener('click', () => openModal('resetModal'));
@@ -3628,88 +3650,53 @@ document.querySelector('.logo').addEventListener('click', (() => {
     };
 })());
 
-// ==================== NOTIFICATIONS ====================
-const NOTIF_KEY = 'learnit_notifications';
-const NOTIF_READ_KEY = 'learnit_notif_read';
-
-function getNotifications() {
-    try { return JSON.parse(localStorage.getItem(NOTIF_KEY) || '[]'); } catch(e) { return []; }
-}
-
-function saveNotifications(notifs) {
-    localStorage.setItem(NOTIF_KEY, JSON.stringify(notifs));
-}
-
-function getReadIds() {
-    try { return JSON.parse(localStorage.getItem(NOTIF_READ_KEY) || '[]'); } catch(e) { return []; }
-}
-
-function markRead(id) {
-    const read = getReadIds();
-    if (!read.includes(id)) read.push(id);
-    localStorage.setItem(NOTIF_READ_KEY, JSON.stringify(read));
+// ==================== NOTIFICATIONS (Firebase) ====================
+var NOTIF_READ_KEY = 'learnit_notif_read';
+function _getRead(){try{return JSON.parse(localStorage.getItem(NOTIF_READ_KEY)||'[]')}catch(e){return[]}}
+function markRead(id){
+    var r=_getRead();
+    if(r.indexOf(id)<0){r.push(id);localStorage.setItem(NOTIF_READ_KEY,JSON.stringify(r));}
     renderNotifPanel();
 }
-
-function markAllRead() {
-    const notifs = getNotifications();
-    localStorage.setItem(NOTIF_READ_KEY, JSON.stringify(notifs.map(n => n.id)));
+function markAllRead(){
+    var n=window._notifs||[];
+    localStorage.setItem(NOTIF_READ_KEY,JSON.stringify(n.map(function(x){return x.id})));
     renderNotifPanel();
 }
-
-function sendNotification(message, type) {
-    const notifs = getNotifications();
-    notifs.unshift({
-        id: Date.now(),
-        message,
-        type,
-        date: new Date().toISOString()
-    });
-    saveNotifications(notifs);
-    renderNotifPanel();
-    renderNotifLog();
+async function sendNotification(message,type){
+    if(!window._db){showToast('Firebase no listo','error');return;}
+    await window._fc.addDoc(window._fc.collection(window._db,'notifications'),{message:message,type:type,date:window._fc.serverTimestamp()});
     showToast('Notificación publicada');
 }
-
-function renderNotifPanel() {
-    const notifs = getNotifications();
-    const read = getReadIds();
-    const unread = notifs.filter(n => !read.includes(n.id));
-    const dot = document.getElementById('notifDot');
-    const list = document.getElementById('notifPanelList');
-
-    dot.classList.toggle('active', unread.length > 0);
-
-    if (notifs.length === 0) {
-        list.innerHTML = '<div class="notif-panel-empty">Sin notificaciones</div>';
-        return;
-    }
-
-    const typeEmoji = { info: '💬', warning: '⚠️', urgent: '🚨' };
-    list.innerHTML = notifs.slice(0, 10).map(n => `
-        <div class="notif-panel-item ${read.includes(n.id) ? '' : 'unread'}" onclick="markRead(${n.id})">
-            ${typeEmoji[n.type] || '💬'} ${n.message}
-            <div class="notif-time">${new Date(n.date).toLocaleString('es-ES')}</div>
-        </div>
-    `).join('');
+function renderNotifPanel(){
+    var notifs=window._notifs||[];
+    var read=_getRead();
+    var dot=document.getElementById('notifDot');
+    var list=document.getElementById('notifPanelList');
+    if(!list)return;
+    if(dot)dot.classList.toggle('active',notifs.filter(function(n){return read.indexOf(n.id)<0}).length>0);
+    if(!notifs.length){list.innerHTML='<div class="notif-panel-empty">Sin notificaciones</div>';return;}
+    var em={info:'💬',warning:'⚠️',urgent:'🚨'};
+    list.innerHTML=notifs.slice(0,20).map(function(n){
+        var d=n.date&&n.date.toDate?n.date.toDate().toLocaleString('es-ES'):'—';
+        var isRead=read.indexOf(n.id)>=0;
+        var cls=isRead?'notif-panel-item':'notif-panel-item unread';
+        var icon=em[n.type]||'💬';
+        var nid=n.id;
+        return '<div class="'+cls+'" onclick="markRead(&quot;'+nid+'&quot;)">'+icon+' '+n.message+'<div class="notif-time">'+d+'</div></div>';
+    }).join('');
 }
-
-function renderNotifLog() {
-    const notifs = getNotifications();
-    const log = document.getElementById('notifLog');
-    if (!log) return;
-    if (notifs.length === 0) {
-        log.innerHTML = '<div class="notif-panel-empty">No hay notificaciones enviadas aún.</div>';
-        return;
-    }
-    log.innerHTML = notifs.map(n => `
-        <div class="notif-log-item">
-            <span class="notif-log-type ${n.type}">${n.type.toUpperCase()}</span>
-            ${n.message}
-            <div class="notif-log-date">${new Date(n.date).toLocaleString('es-ES')}</div>
-        </div>
-    `).join('');
+function renderNotifLog(){
+    var notifs=window._notifs||[];
+    var log=document.getElementById('notifLog');
+    if(!log)return;
+    if(!notifs.length){log.innerHTML='<div class="notif-panel-empty">No hay notificaciones enviadas aún.</div>';return;}
+    log.innerHTML=notifs.map(function(n){
+        var d=n.date&&n.date.toDate?n.date.toDate().toLocaleString('es-ES'):'—';
+        return '<div class="notif-log-item"><span class="notif-log-type '+n.type+'">'+n.type.toUpperCase()+'</span> '+n.message+'<div class="notif-log-date">'+d+'</div></div>';
+    }).join('');
 }
+window._onNotifs=function(){renderNotifPanel();renderNotifLog();};
 
 // Bell toggle
 document.getElementById('notifBellBtn').addEventListener('click', (e) => {
@@ -3727,12 +3714,16 @@ document.getElementById('markAllReadBtn').addEventListener('click', (e) => {
 });
 
 // Admin: send notification button
-document.getElementById('sendNotifBtn')?.addEventListener('click', () => {
-    const msg = document.getElementById('notifMessage').value.trim();
-    const type = document.querySelector('.notif-type-btn.active')?.getAttribute('data-type') || 'info';
-    if (!msg) { showToast('Escribe un mensaje', 'error'); return; }
-    sendNotification(msg, type);
-    document.getElementById('notifMessage').value = '';
+document.getElementById('sendNotifBtn')?.addEventListener('click',async function(){
+    var msg=document.getElementById('notifMessage').value.trim();
+    var activeBtn=document.querySelector('.notif-type-btn.active');
+    var type=activeBtn?activeBtn.getAttribute('data-type'):'info';
+    if(!msg){showToast('Escribe un mensaje','error');return;}
+    var btn=document.getElementById('sendNotifBtn');
+    btn.disabled=true;btn.textContent='⏳ Publicando...';
+    await sendNotification(msg,type);
+    btn.disabled=false;btn.textContent='📤 Publicar notificación';
+    document.getElementById('notifMessage').value='';
 });
 
 // Admin: notification type selector
@@ -3742,6 +3733,43 @@ document.querySelectorAll('.notif-type-btn').forEach(btn => {
         btn.classList.add('active');
     });
 });
+
+// Bug reports admin (Firebase)
+function renderBugReports(){
+    var bugs=window._bugs||[];
+    var c=document.getElementById('bugReportsList');
+    var badge=document.getElementById('bugBadge');
+    if(!c)return;
+    var pend=bugs.filter(function(b){return b.status==='pendiente';});
+    if(badge)badge.textContent=pend.length>0?pend.length+' nuevos':'';
+    if(!bugs.length){c.innerHTML='<div class="notif-panel-empty">No hay reportes aún.</div>';return;}
+    c.innerHTML=bugs.map(function(bug){
+        var d=bug.date&&bug.date.toDate?bug.date.toDate().toLocaleString('es-ES'):'—';
+        var ip=bug.status==='pendiente';
+        var h='<div style="padding:1rem;border-bottom:1px solid var(--border)">';
+        h+='<div style="display:flex;gap:1rem;align-items:flex-start">';
+        h+='<div style="flex:1">';
+        h+='<div style="display:flex;gap:0.5rem;margin-bottom:0.4rem">';
+        var bgc=ip?'rgba(255,107,157,0.2)':'rgba(78,205,196,0.2)';
+        var fgc=ip?'var(--danger)':'var(--success)';
+        h+='<span style="background:'+bgc+';color:'+fgc+';padding:0.1rem 0.5rem;border-radius:5px;font-size:0.7rem;font-weight:700">'+bug.status.toUpperCase()+'</span>';
+        h+='<span style="font-size:0.75rem;color:var(--text-secondary)">'+d+'</span></div>';
+        h+='<div style="font-size:0.9rem;line-height:1.5">'+bug.description+'</div>';
+        if(bug.reply)h+='<div style="margin-top:0.4rem;background:rgba(108,99,255,0.08);border-left:3px solid var(--accent);padding:0.4rem 0.7rem;border-radius:0 6px 6px 0;font-size:0.82rem">💬 '+bug.reply+'</div>';
+        h+='</div>';
+        h+='<div style="display:flex;flex-direction:column;gap:0.4rem">';
+        var bid=bug.id;
+        if(ip)h+='<button onclick="adminResolveBug(&quot;'+bid+'&quot;)" style="background:rgba(78,205,196,0.15);border:1px solid rgba(78,205,196,0.3);color:var(--success);border-radius:7px;padding:0.35rem 0.7rem;cursor:pointer;font-size:0.78rem">✓</button>';
+        h+='<button onclick="adminReplyBug(&quot;'+bid+'&quot;)" style="background:rgba(108,99,255,0.12);border:1px solid rgba(108,99,255,0.25);color:var(--accent);border-radius:7px;padding:0.35rem 0.7rem;cursor:pointer;font-size:0.78rem">💬</button>';
+        h+='<button onclick="adminDeleteBug(&quot;'+bid+'&quot;)" style="background:rgba(255,107,157,0.1);border:1px solid rgba(255,107,157,0.2);color:var(--danger);border-radius:7px;padding:0.35rem 0.7rem;cursor:pointer;font-size:0.78rem">🗑️</button>';
+        h+='</div></div></div>';
+        return h;
+    }).join('');
+}
+window._onBugs=renderBugReports;
+async function adminResolveBug(id){await window._fc.updateDoc(window._fc.doc(window._db,'bugs',id),{status:'resuelto'});showToast('Resuelto ✓');}
+async function adminReplyBug(id){var r=prompt('Respuesta al usuario:');if(r===null)return;await window._fc.updateDoc(window._fc.doc(window._db,'bugs',id),{reply:r});showToast('Guardado ✓');}
+async function adminDeleteBug(id){if(!confirm('¿Eliminar?'))return;await window._fc.deleteDoc(window._fc.doc(window._db,'bugs',id));showToast('Eliminado');}
 
 // Admin stats
 function updateAdminStats() {
@@ -4012,13 +4040,9 @@ ${text.slice(0, 8000)}`;
     try {
         const response = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'anthropic-version': '2023-06-01',
-                'anthropic-dangerous-direct-browser-access': 'true'
-            },
+            headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
             body: JSON.stringify({
-                model: 'claude-sonnet-4-20250514',
+                model: 'claude-haiku-4-5',
                 max_tokens: 2000,
                 messages: [{ role: 'user', content: messageContent }]
             })
@@ -4188,72 +4212,324 @@ document.addEventListener('DOMContentLoaded', () => {
     renderDecks();
     renderNotifPanel();
     renderNotifLog();
+    renderBugReports();
     updateAdminStats();
 
-    // ==================== LANGUAGE SELECTOR (DASHBOARD) ====================
-    const dashLangTranslations = {
-        es: { dashboard: 'Dashboard', subjects: 'Mis Materias', exams: 'Exámenes', assignments: 'Tareas', flashcards: 'Flashcards', games: 'Minijuegos', profile: 'Perfil', timer: 'Temporizador', weeklyHours: 'Horas Semanales', statistics: 'Estadísticas', nextExam: 'Próximo Examen', quickActions: 'Acciones Rápidas' },
-        en: { dashboard: 'Dashboard', subjects: 'My Subjects', exams: 'Exams', assignments: 'Assignments', flashcards: 'Flashcards', games: 'Mini Games', profile: 'Profile', timer: 'Timer', weeklyHours: 'Weekly Hours', statistics: 'Statistics', nextExam: 'Next Exam', quickActions: 'Quick Actions' },
-        gl: { dashboard: 'Panel', subjects: 'As Miñas Materias', exams: 'Exames', assignments: 'Tarefas', flashcards: 'Flashcards', games: 'Minixogos', profile: 'Perfil', timer: 'Temporizador', weeklyHours: 'Horas Semanais', statistics: 'Estatísticas', nextExam: 'Próximo Exame', quickActions: 'Accións Rápidas' },
-        fr: { dashboard: 'Tableau de bord', subjects: 'Mes Matières', exams: 'Examens', assignments: 'Devoirs', flashcards: 'Flashcards', games: 'Mini-jeux', profile: 'Profil', timer: 'Minuteur', weeklyHours: 'Heures Hebdo', statistics: 'Statistiques', nextExam: 'Prochain Examen', quickActions: 'Actions Rapides' },
-        de: { dashboard: 'Dashboard', subjects: 'Meine Fächer', exams: 'Prüfungen', assignments: 'Aufgaben', flashcards: 'Lernkarten', games: 'Minispiele', profile: 'Profil', timer: 'Timer', weeklyHours: 'Wochenstunden', statistics: 'Statistiken', nextExam: 'Nächste Prüfung', quickActions: 'Schnellaktionen' }
+
+    // ============================================================
+    // LANGUAGE SELECTOR
+    // ============================================================
+    const LANG_STRINGS = {
+        es: {
+            // sidebar
+            'section-dashboard': 'Dashboard',
+            'section-subjects':  'Mis Materias',
+            'section-exams':     'Exámenes',
+            'section-assignments':'Tareas',
+            'section-flashcards':'Flashcards',
+            'section-games':     'Minijuegos',
+            'section-profile':   'Perfil',
+            // card titles
+            timerCard:     'Temporizador',
+            hoursCard:     'Horas Semanales',
+            statsCard:     'Estadísticas',
+            examCard:      'Próximo Examen',
+            actionsCard:   'Acciones Rápidas',
+            // timer
+            customMode:    'Personalizado',
+            pomodoroMode:  'Pomodoro',
+            timerStart:    '▶ Iniciar',
+            timerPause:    '⏸ Pausar',
+            timerContinue: '▶ Continuar',
+            timerStop:     '⏹ Detener',
+            editGoal:      '✏️ Editar Meta',
+            resetWeek:     '🔄 Resetear',
+            // stats labels
+            stat0: 'Sesiones hoy', stat1: 'Promedio diario (h)',
+            stat2: 'Racha días',   stat3: 'Total horas',
+            // quick actions
+            qa0: 'Nueva Tarea', qa1: 'Nuevo Examen',
+            qa2: 'Nueva Materia', qa3: 'Ver Reportes',
+            // notifications
+            notifTitle: 'Notificaciones', markRead: 'Marcar todo leído',
+            noNotif: 'Sin notificaciones',
+            // profile labels
+            profPersonal: 'Información Personal',
+            profStats:    'Estadísticas',
+            profSettings: 'Configuración',
+            profName:     'Nombre Completo',
+            profEmail:    'Correo Electrónico',
+            profCenter:   'Centro educativo',
+            profStudies:  'Estudios',
+            profSave:     'Guardar Cambios',
+            profCancel:   'Cancelar',
+            profBug:      '🐛 Reportar un Bug',
+            profReset:    '🔄 Restaurar de Fábrica',
+        },
+        en: {
+            'section-dashboard': 'Dashboard',
+            'section-subjects':  'My Subjects',
+            'section-exams':     'Exams',
+            'section-assignments':'Assignments',
+            'section-flashcards':'Flashcards',
+            'section-games':     'Mini Games',
+            'section-profile':   'Profile',
+            timerCard:     'Timer',
+            hoursCard:     'Weekly Hours',
+            statsCard:     'Statistics',
+            examCard:      'Next Exam',
+            actionsCard:   'Quick Actions',
+            customMode:    'Custom',
+            pomodoroMode:  'Pomodoro',
+            timerStart:    '▶ Start',
+            timerPause:    '⏸ Pause',
+            timerContinue: '▶ Resume',
+            timerStop:     '⏹ Stop',
+            editGoal:      '✏️ Edit Goal',
+            resetWeek:     '🔄 Reset',
+            stat0: "Today's sessions", stat1: 'Daily avg (h)',
+            stat2: 'Day streak',       stat3: 'Total hours',
+            qa0: 'New Task', qa1: 'New Exam',
+            qa2: 'New Subject', qa3: 'View Reports',
+            notifTitle: 'Notifications', markRead: 'Mark all read',
+            noNotif: 'No notifications',
+            profPersonal: 'Personal Information',
+            profStats:    'Statistics',
+            profSettings: 'Settings',
+            profName:     'Full Name',
+            profEmail:    'Email',
+            profCenter:   'Educational center',
+            profStudies:  'Studies',
+            profSave:     'Save Changes',
+            profCancel:   'Cancel',
+            profBug:      '🐛 Report a Bug',
+            profReset:    '🔄 Factory Reset',
+        },
+        gl: {
+            'section-dashboard': 'Panel',
+            'section-subjects':  'As Miñas Materias',
+            'section-exams':     'Exames',
+            'section-assignments':'Tarefas',
+            'section-flashcards':'Flashcards',
+            'section-games':     'Minixogos',
+            'section-profile':   'Perfil',
+            timerCard:     'Temporizador',
+            hoursCard:     'Horas Semanais',
+            statsCard:     'Estatísticas',
+            examCard:      'Próximo Exame',
+            actionsCard:   'Accións Rápidas',
+            customMode:    'Personalizado',
+            pomodoroMode:  'Pomodoro',
+            timerStart:    '▶ Iniciar',
+            timerPause:    '⏸ Pausar',
+            timerContinue: '▶ Continuar',
+            timerStop:     '⏹ Deter',
+            editGoal:      '✏️ Editar Meta',
+            resetWeek:     '🔄 Resetear',
+            stat0: 'Sesións hoxe', stat1: 'Media diaria (h)',
+            stat2: 'Racha días',   stat3: 'Total horas',
+            qa0: 'Nova Tarefa', qa1: 'Novo Exame',
+            qa2: 'Nova Materia', qa3: 'Ver Informes',
+            notifTitle: 'Notificacións', markRead: 'Marcar todo lido',
+            noNotif: 'Sen notificacións',
+            profPersonal: 'Información Persoal',
+            profStats:    'Estatísticas',
+            profSettings: 'Configuración',
+            profName:     'Nome Completo',
+            profEmail:    'Correo Electrónico',
+            profCenter:   'Centro educativo',
+            profStudies:  'Estudos',
+            profSave:     'Gardar Cambios',
+            profCancel:   'Cancelar',
+            profBug:      '🐛 Reportar un Bug',
+            profReset:    '🔄 Restaurar de Fábrica',
+        },
+        fr: {
+            'section-dashboard': 'Tableau de bord',
+            'section-subjects':  'Mes Matières',
+            'section-exams':     'Examens',
+            'section-assignments':'Devoirs',
+            'section-flashcards':'Flashcards',
+            'section-games':     'Mini-jeux',
+            'section-profile':   'Profil',
+            timerCard:     'Minuteur',
+            hoursCard:     'Heures Hebdo',
+            statsCard:     'Statistiques',
+            examCard:      'Prochain Examen',
+            actionsCard:   'Actions Rapides',
+            customMode:    'Personnalisé',
+            pomodoroMode:  'Pomodoro',
+            timerStart:    '▶ Démarrer',
+            timerPause:    '⏸ Pause',
+            timerContinue: '▶ Reprendre',
+            timerStop:     '⏹ Arrêter',
+            editGoal:      '✏️ Modifier objectif',
+            resetWeek:     '🔄 Réinitialiser',
+            stat0: "Sessions aujourd'hui", stat1: 'Moy. quotidienne (h)',
+            stat2: 'Jours de suite',       stat3: 'Total heures',
+            qa0: 'Nouvelle Tâche', qa1: 'Nouvel Examen',
+            qa2: 'Nouvelle Matière', qa3: 'Voir Rapports',
+            notifTitle: 'Notifications', markRead: 'Tout marquer lu',
+            noNotif: 'Pas de notifications',
+            profPersonal: 'Informations Personnelles',
+            profStats:    'Statistiques',
+            profSettings: 'Paramètres',
+            profName:     'Nom Complet',
+            profEmail:    'E-mail',
+            profCenter:   'Établissement scolaire',
+            profStudies:  'Études',
+            profSave:     'Enregistrer',
+            profCancel:   'Annuler',
+            profBug:      '🐛 Signaler un Bug',
+            profReset:    '🔄 Réinitialisation',
+        },
+        de: {
+            'section-dashboard': 'Dashboard',
+            'section-subjects':  'Meine Fächer',
+            'section-exams':     'Prüfungen',
+            'section-assignments':'Aufgaben',
+            'section-flashcards':'Lernkarten',
+            'section-games':     'Minispiele',
+            'section-profile':   'Profil',
+            timerCard:     'Timer',
+            hoursCard:     'Wochenstunden',
+            statsCard:     'Statistiken',
+            examCard:      'Nächste Prüfung',
+            actionsCard:   'Schnellaktionen',
+            customMode:    'Benutzerdefiniert',
+            pomodoroMode:  'Pomodoro',
+            timerStart:    '▶ Starten',
+            timerPause:    '⏸ Pause',
+            timerContinue: '▶ Fortsetzen',
+            timerStop:     '⏹ Stoppen',
+            editGoal:      '✏️ Ziel bearbeiten',
+            resetWeek:     '🔄 Zurücksetzen',
+            stat0: 'Sitzungen heute', stat1: 'Tagesdurchschnitt (h)',
+            stat2: 'Tagessträhne',    stat3: 'Gesamtstunden',
+            qa0: 'Neue Aufgabe', qa1: 'Neue Prüfung',
+            qa2: 'Neues Fach', qa3: 'Berichte ansehen',
+            notifTitle: 'Benachrichtigungen', markRead: 'Alle gelesen',
+            noNotif: 'Keine Benachrichtigungen',
+            profPersonal: 'Persönliche Informationen',
+            profStats:    'Statistiken',
+            profSettings: 'Einstellungen',
+            profName:     'Vollständiger Name',
+            profEmail:    'E-Mail',
+            profCenter:   'Bildungseinrichtung',
+            profStudies:  'Studiengang',
+            profSave:     'Änderungen speichern',
+            profCancel:   'Abbrechen',
+            profBug:      '🐛 Bug melden',
+            profReset:    '🔄 Werkseinstellungen',
+        }
     };
 
-    const dashMenuLabels = {
-        'section-dashboard': 'dashboard',
-        'section-subjects': 'subjects',
-        'section-exams': 'exams',
-        'section-assignments': 'assignments',
-        'section-flashcards': 'flashcards',
-        'section-games': 'games',
-        'section-profile': 'profile'
-    };
+    let currentLang = localStorage.getItem('learnit_lang') || 'es';
 
-    let dashCurrentLanguage = localStorage.getItem('learnit_lang') || 'es';
-
-    function applyDashLanguage(lang) {
-        dashCurrentLanguage = lang;
+    function applyLang(lang) {
+        currentLang = lang;
         localStorage.setItem('learnit_lang', lang);
-        document.getElementById('dashCurrentLang').textContent = lang.toUpperCase();
-        const t = dashLangTranslations[lang] || dashLangTranslations.es;
-        // Update menu items
+        const t = LANG_STRINGS[lang] || LANG_STRINGS.es;
+        document.getElementById('dashLangLabel').textContent = lang.toUpperCase();
+
+        // Active option highlight
+        document.querySelectorAll('.lang-opt').forEach(o =>
+            o.classList.toggle('active', o.dataset.lang === lang));
+
+        // Sidebar menu items
         document.querySelectorAll('.menu-item[data-section]').forEach(item => {
-            const section = item.getAttribute('data-section');
-            const key = dashMenuLabels[section];
-            if (key && t[key]) {
-                const span = item.querySelector('span:not(.menu-icon)');
-                if (span) span.textContent = t[key];
+            const key = item.dataset.section;
+            if (t[key]) {
+                item.querySelector('span:not(.menu-icon)').textContent = t[key];
+                item.dataset.tooltip = t[key];
             }
         });
-        // Update topbar title
-        const activeSection = document.querySelector('.menu-item.active');
-        if (activeSection) {
-            const key = dashMenuLabels[activeSection.getAttribute('data-section')];
-            if (key && t[key]) document.querySelector('.topbar-left h1').textContent = t[key];
+
+        // Topbar h1 (mirrors active menu item)
+        const activeItem = document.querySelector('.menu-item.active');
+        if (activeItem && t[activeItem.dataset.section]) {
+            document.querySelector('.topbar-left h1').textContent = t[activeItem.dataset.section];
         }
-        // Update menu tooltips
+
+        // Card titles
+        const ct = document.querySelectorAll('.card-title span:not(.card-icon)');
+        const ctKeys = ['timerCard','hoursCard','statsCard','examCard','actionsCard'];
+        ct.forEach((el, i) => { if (ctKeys[i] && t[ctKeys[i]]) el.textContent = t[ctKeys[i]]; });
+
+        // Timer mode buttons
+        const cmb = document.getElementById('customModeBtn');
+        const pmb = document.getElementById('pomodoroModeBtn');
+        if (cmb) cmb.textContent = t.customMode;
+        if (pmb) pmb.textContent = t.pomodoroMode;
+
+        // Timer control buttons
+        const pb = document.getElementById('playBtn');
+        if (pb) pb.textContent = pb.classList.contains('pause') ? t.timerPause : (pb.textContent.includes('Continuar')||pb.textContent.includes('Resume')||pb.textContent.includes('Reprendre')||pb.textContent.includes('Fortsetzen') ? t.timerContinue : t.timerStart);
+        const sb = document.getElementById('stopBtn');
+        if (sb) sb.textContent = t.timerStop;
+
+        // Weekly hours buttons
+        const egb = document.getElementById('editGoalBtn');
+        if (egb) egb.textContent = t.editGoal;
+        const rwb = document.getElementById('resetWeekBtn');
+        if (rwb) rwb.textContent = t.resetWeek;
+
+        // Stat labels
+        const sl = document.querySelectorAll('.stat-label');
+        ['stat0','stat1','stat2','stat3'].forEach((k,i) => { if (sl[i]) sl[i].textContent = t[k]; });
+
+        // Quick action labels
+        const qa = document.querySelectorAll('.quick-action-label');
+        ['qa0','qa1','qa2','qa3'].forEach((k,i) => { if (qa[i]) qa[i].textContent = t[k]; });
+
+        // Notifications panel header
+        const nh = document.querySelector('.notif-panel-header span');
+        if (nh) nh.textContent = t.notifTitle;
+        const mr = document.getElementById('markAllReadBtn');
+        if (mr) mr.textContent = t.markRead;
+
+        // Profile section titles
+        const pst = document.querySelectorAll('.profile-section-title span:last-child');
+        if (pst[0]) pst[0].textContent = t.profPersonal;
+        if (pst[1]) pst[1].textContent = t.profStats;
+        if (pst[2]) pst[2].textContent = t.profSettings;
+
+        // Profile form labels
+        const pl = document.querySelectorAll('.profile-label');
+        const plk = ['profName','profEmail','profCenter','profStudies'];
+        pl.forEach((el,i) => { if (plk[i] && t[plk[i]]) el.textContent = t[plk[i]]; });
+
+        // Profile buttons
+        const cpb = document.getElementById('cancelProfileBtn');
+        if (cpb) cpb.textContent = t.profCancel;
+        const rbb = document.getElementById('reportBugBtn');
+        if (rbb) rbb.textContent = t.profBug;
+        const rab = document.getElementById('resetAllBtn');
+        if (rab) rab.textContent = t.profReset;
+
+        // Also update topbar h1 when navigating sections
         document.querySelectorAll('.menu-item[data-section]').forEach(item => {
-            const section = item.getAttribute('data-section');
-            const key = dashMenuLabels[section];
-            if (key && t[key]) item.setAttribute('data-tooltip', t[key]);
-        });
-        // Update active option styling
-        document.querySelectorAll('.lang-option').forEach(opt => {
-            opt.classList.toggle('active', opt.getAttribute('data-lang') === lang);
+            item._origClickHandler = item._origClickHandler; // preserve existing
         });
     }
 
-    document.querySelectorAll('.lang-option').forEach(opt => {
-        opt.addEventListener('click', (e) => {
+    // Bind language options
+    document.querySelectorAll('.lang-opt').forEach(opt => {
+        opt.addEventListener('click', e => {
             e.stopPropagation();
-            applyDashLanguage(opt.getAttribute('data-lang'));
+            applyLang(opt.dataset.lang);
         });
     });
 
-    // Apply saved language on load
-    applyDashLanguage(dashCurrentLanguage);
+    // Re-apply lang label when navigating sections
+    const _origNavigate = navigateToSection;
+    navigateToSection = function(sectionId) {
+        _origNavigate(sectionId);
+        const t = LANG_STRINGS[currentLang] || LANG_STRINGS.es;
+        if (t[sectionId]) document.querySelector('.topbar-left h1').textContent = t[sectionId];
+    };
 
-    // ==================== LOGOUT ====================
+    // Logout
     document.getElementById('logoutBtn').addEventListener('click', () => {
         if (confirm('¿Cerrar sesión?')) {
             localStorage.removeItem('learnit_logged_in');
@@ -4262,6 +4538,9 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'index.html';
         }
     });
+
+    // Apply on load
+    applyLang(currentLang);
 
 });
 </script>

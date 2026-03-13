@@ -258,6 +258,105 @@
             .support-btn span { display: none; }
             .support-btn { padding: 1rem; border-radius: 50%; bottom: 4rem; }
         }
+
+        /* ===== ADMIN MODAL ===== */
+        .admin-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.2s ease;
+        }
+        @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+        .admin-modal-box {
+            background: var(--container-dark);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(108,99,255,0.2);
+            animation: slideUp 0.3s ease;
+        }
+        body.light-mode .admin-modal-box {
+            background: var(--container-light);
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity:0 } to { transform: translateY(0); opacity:1 } }
+        .admin-modal-icon {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .admin-modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.4rem;
+        }
+        .admin-modal-subtitle {
+            font-size: 0.85rem;
+            text-align: center;
+            opacity: 0.6;
+            margin-bottom: 1.8rem;
+        }
+        .admin-pwd-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(108,99,255,0.08);
+            border: 1.5px solid rgba(108,99,255,0.25);
+            border-radius: 12px;
+            color: inherit;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 0.8rem;
+        }
+        .admin-pwd-input:focus { border-color: var(--accent); }
+        .admin-error {
+            display: none;
+            font-size: 0.82rem;
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .admin-login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--accent), #5a52d5);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(108,99,255,0.3);
+        }
+        .admin-login-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108,99,255,0.5); }
+        .admin-cancel-btn {
+            width: 100%;
+            padding: 0.7rem;
+            background: none;
+            border: none;
+            color: inherit;
+            opacity: 0.5;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            transition: opacity 0.2s;
+        }
+        .admin-cancel-btn:hover { opacity: 0.8; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        .shake { animation: shake 0.4s ease; }
+
     </style>
 </head>
 <body class="dark-mode">
@@ -337,7 +436,7 @@
             Learn it is a platform that allows you to structure your studies and learning online in a simple way
         </p>
     </footer>
-    <a href="mailto:support@learnit.com" class="support-btn" id="supportBtn">
+    <a href="/cdn-cgi/l/email-protection#added8ddddc2dfd9edc1c8ccdfc3c4d983cec2c0" class="support-btn" id="supportBtn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
             <polyline points="22,6 12,13 2,6"/>
@@ -345,54 +444,8 @@
         <span data-translate="support">Support</span>
     </a>
 
-        <!-- Firebase: solo para el login con Google -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged }
-            from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey:            "AIzaSyAsB4wXWkCFDuA2trB70ANwZJfp4ZZI9Kw",
-            authDomain:        "learn-it-8cece.firebaseapp.com",
-            projectId:         "learn-it-8cece",
-            storageBucket:     "learn-it-8cece.firebasestorage.app",
-            messagingSenderId: "209541542824",
-            appId:             "1:209541542824:web:6abd2d7bedf64d5fbd639d"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        // Si ya hay sesión activa → ir al dashboard directamente
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                localStorage.setItem('learnit_auth_mode', 'google');
-                localStorage.setItem('learnit_firebase_user', JSON.stringify({
-                    uid:   user.uid,
-                    name:  user.displayName || 'Usuario',
-                    email: user.email || '',
-                    photo: user.photoURL || ''
-                }));
-                window.location.href = 'dashboard.html';
-            }
-        });
-
-        // Botón de Google
-        document.querySelector('.btn-google').addEventListener('click', async () => {
-            try {
-                const provider = new GoogleAuthProvider();
-                await signInWithPopup(auth, provider);
-                // onAuthStateChanged se encarga de redirigir
-            } catch (error) {
-                if (error.code !== 'auth/popup-closed-by-user') {
-                    alert('Error al iniciar sesión con Google: ' + error.message);
-                }
-            }
-        });
-    </script>
-
-    <script>
-        // --- CÓDIGO DE TRADUCCIÓN ---
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // --- CÓDIGO DE TRADUCCIÓN AÑADIDO ---
         const translations = {
             en: {
                 subtitle: "Your learning platform",
@@ -447,24 +500,31 @@
         langOptions.forEach(option => {
             option.addEventListener('click', () => {
                 const lang = option.getAttribute('data-lang');
+                
+                // Cambiar el texto del botón principal
                 currentLangDisplay.textContent = lang.toUpperCase();
+                
+                // Actualizar clases activas en el menú
                 langOptions.forEach(opt => opt.classList.remove('active'));
                 option.classList.add('active');
+
+                // Traducir todos los elementos con [data-translate]
                 document.querySelectorAll('[data-translate]').forEach(el => {
                     const key = el.getAttribute('data-translate');
-                    if (translations[lang] && translations[lang][key]) {
+                    if (translations[lang][key]) {
                         el.textContent = translations[lang][key];
                     }
                 });
             });
         });
+        // --- FIN CÓDIGO DE TRADUCCIÓN ---
 
-        // ===== TEMA =====
+        // ===== GESTIÓN DEL TEMA (TU CÓDIGO ORIGINAL) =====
         const themeToggleWrapper = document.getElementById('themeToggleWrapper');
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const savedTheme = localStorage.getItem('theme') || 'dark';
-        body.className = savedTheme + '-mode';
+        body.className = `${savedTheme}-mode`;
 
         themeToggleWrapper.addEventListener('click', () => {
             if (body.classList.contains('dark-mode')) {
@@ -488,19 +548,51 @@
 
         document.querySelector('.admin-link').addEventListener('click', (e) => {
             e.preventDefault();
+            openAdminModal();
         });
 
-        // ===== INVITADO =====
-        document.addEventListener('DOMContentLoaded', () => {
-            const guestBtn = document.querySelector('.btn-guest');
-            if (guestBtn) {
-                guestBtn.addEventListener('click', () => {
-                    localStorage.setItem('learnit_auth_mode', 'guest');
-                    localStorage.removeItem('learnit_firebase_user');
-                    window.location.href = 'dashboard.html';
-                });
+        // ===== ADMIN MODAL =====
+        function openAdminModal() {
+            document.getElementById('adminModalOverlay').style.display = 'flex';
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminPasswordInput').focus();
+            document.getElementById('adminError').style.display = 'none';
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModalOverlay').style.display = 'none';
+        }
+
+        function getAdminPassword() {
+            return localStorage.getItem('learnit_admin_pwd') || 'learnit-admin-2024';
+        }
+
+        document.getElementById('adminLoginBtn').addEventListener('click', () => {
+            const pwd = document.getElementById('adminPasswordInput').value;
+            if (pwd === getAdminPassword()) {
+                sessionStorage.setItem('learnit_admin', 'true');
+                window.location.href = 'admin.html';
+            } else {
+                document.getElementById('adminError').style.display = 'block';
+                document.getElementById('adminPasswordInput').value = '';
+                document.getElementById('adminPasswordInput').focus();
+                document.getElementById('adminPasswordInput').classList.add('shake');
+                setTimeout(() => document.getElementById('adminPasswordInput').classList.remove('shake'), 500);
             }
         });
+
+        document.getElementById('adminPasswordInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') document.getElementById('adminLoginBtn').click();
+        });
+
+        document.getElementById('adminModalOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeAdminModal();
+        });
     </script>
-</body>
-</html>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const guestBtn = document.querySelector('.btn-guest');
+
+        if (guestBtn) {
+            guestBtn.addEventListener('click', () => {
+                localStorage.setItem('

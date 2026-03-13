@@ -1372,6 +1372,62 @@
             background: rgba(255, 107, 157, 0.2);
             transform: scale(1.1);
         }
+    
+        /* ==================== USER BANNER ==================== */
+        .user-banner {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.65rem 1.5rem;
+            font-size: 0.82rem;
+            background: linear-gradient(90deg, rgba(108, 99, 255, 0.12), rgba(78, 205, 196, 0.12));
+            border-bottom: 1px solid rgba(108, 99, 255, 0.2);
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+        .user-banner.warning {
+            background: linear-gradient(90deg, rgba(255, 211, 61, 0.12), rgba(255, 107, 107, 0.08));
+            border-bottom-color: rgba(255, 211, 61, 0.25);
+        }
+        .user-banner a { color: var(--accent); font-weight: 600; }
+        body.has-banner .main-content { padding-top: calc(60px + 2.5rem); }
+        body.has-banner .sidebar { top: 38px; height: calc(100vh - 38px); }
+        body.has-banner .topbar { top: 38px; }
+
+        /* Logout button in sidebar */
+        .logout-btn {
+            display: none;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.9rem 1.2rem;
+            margin: 0.3rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            background: rgba(255, 107, 157, 0.08);
+            border: 1px solid rgba(255, 107, 157, 0.15);
+            color: #ff6b9d;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            width: calc(100% - 2rem);
+            margin-top: auto;
+        }
+        .logout-btn:hover {
+            background: rgba(255, 107, 157, 0.15);
+            border-color: rgba(255, 107, 157, 0.3);
+        }
+        .sidebar.collapsed .logout-btn {
+            justify-content: center;
+            padding: 0.9rem;
+            font-size: 0;
+        }
+        .sidebar.collapsed .logout-btn::before {
+            content: "🚪";
+            font-size: 1.2rem;
+        }
+
     </style>
 </head>
 <body>
@@ -1419,6 +1475,8 @@
                 <span>Perfil</span>
             </div>
         </nav>
+        <button class="logout-btn" id="logoutBtn">🚪 Cerrar sesión</button>
+
     </aside>
 
     <!-- Sidebar Overlay (Mobile) -->
@@ -1886,8 +1944,211 @@
         <span class="toast-icon">✓</span>
         <span class="toast-message" id="toastMessage"></span>
     </div>
+    <!-- ==================== USER BANNER ==================== -->
+    <div class="user-banner" id="userBanner">
+        <span id="bannerText"></span>
+    </div>
 
-<script>
+    
+<script type="module">
+
+// ==================== FIREBASE + AUTH LAYER ====================
+// Esta capa decide automáticamente si guardar en Firestore (Google)
+// o en localStorage (invitado). El resto del código no cambia.
+
+const AUTH_MODE = localStorage.getItem('learnit_auth_mode') || 'guest';
+const FIREBASE_USER = (() => {
+    try { return JSON.parse(localStorage.getItem('learnit_firebase_user') || 'null'); }
+    catch(e) { return null; }
+})();
+
+// Si el modo es Google pero no hay usuario → volver al login
+if (AUTH_MODE === 'google' && !FIREBASE_USER) {
+    window.location.href = 'index.html';
+}
+
+// ===== Firestore DB (se inicializa solo si modo Google) =====
+let _firestoreDB = null;
+let _firestoreDoc = null;
+let _firestoreEnabled = false;
+
+// Objeto que acumula todos los datos del usuario para Firestore
+// (escribimos en batch para no hacer una petición por cada cambio)
+let _pendingSave = null;
+let _saveTimer = null;
+
+// ==================== FIRESTORE FUNCTIONS ====================
+async function initFirestore() {
+    if (AUTH_MODE !== 'google' || !FIREBASE_USER) return;
+
+    // ============================================================
+    // 🔧 MISMA CONFIGURACIÓN QUE EN index.html
+    // ============================================================
+    const firebaseConfig = {
+        apiKey:            "AIzaSyAsB4wXWkCFDuA2trB70ANwZJfp4ZZI9Kw",
+        authDomain:        "learn-it-8cece.firebaseapp.com",
+        projectId:         "learn-it-8cece",
+        storageBucket:     "learn-it-8cece.firebasestorage.app",
+        messagingSenderId: "209541542824",
+        appId:             "1:209541542824:web:6abd2d7bedf64d5fbd639d"
+    };
+    // ============================================================
+
+    if (firebaseConfig.apiKey === "AIzaSyAsB4wXWkCFDuA2trB70ANwZJfp4ZZI9Kw") {
+        console.warn("Firebase no configurado. Usando localStorage como fallback.");
+        return;
+    }
+
+    try {
+        const { initializeApp, getApps } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
+        const { getFirestore, doc, getDoc, setDoc } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+
+        const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+        _firestoreDB = getFirestore(app);
+        _firestoreDoc = doc(_firestoreDB, "usuarios", FIREBASE_USER.uid);
+        _firestoreEnabled = true;
+
+        // Cargar datos del usuario desde Firestore y meter en localStorage
+        await loadFromFirestore();
+
+        console.log("✅ Firestore conectado para:", FIREBASE_USER.email);
+    } catch (e) {
+        console.error("Error inicializando Firestore:", e);
+        showBanner("⚠️ No se pudo conectar con la nube. Usando datos locales.", "warning");
+    }
+}
+
+async function loadFromFirestore() {
+    if (!_firestoreEnabled) return;
+    try {
+        const { getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+        const snapshot = await getDoc(_firestoreDoc);
+        if (snapshot.exists()) {
+            const data = snapshot.data();
+            // Volcar todos los datos de Firestore a localStorage para que
+            // el resto del código funcione exactamente igual
+            const FIRESTORE_TO_STORAGE = {
+                profile:        STORAGE.PROFILE,
+                weekly_hours:   STORAGE.WEEKLY_HOURS,
+                weekly_goal:    STORAGE.WEEKLY_GOAL,
+                week_start:     STORAGE.WEEK_START,
+                total_hours:    STORAGE.TOTAL_HOURS,
+                total_sessions: STORAGE.TOTAL_SESSIONS,
+                today_sessions: STORAGE.TODAY_SESSIONS,
+                last_session:   STORAGE.LAST_SESSION_DATE,
+                study_history:  STORAGE.STUDY_HISTORY,
+                streak:         STORAGE.CURRENT_STREAK,
+                best_streak:    STORAGE.BEST_STREAK,
+                last_study:     STORAGE.LAST_STUDY_DATE,
+                exams:          STORAGE.EXAMS,
+                subjects:       STORAGE.SUBJECTS,
+                tasks:          STORAGE.TASKS
+            };
+            Object.entries(FIRESTORE_TO_STORAGE).forEach(([firestoreKey, storageKey]) => {
+                if (data[firestoreKey] !== undefined) {
+                    const val = typeof data[firestoreKey] === 'object'
+                        ? JSON.stringify(data[firestoreKey])
+                        : String(data[firestoreKey]);
+                    localStorage.setItem(storageKey, val);
+                }
+            });
+            console.log("✅ Datos cargados desde Firestore");
+        } else {
+            console.log("📄 Usuario nuevo en Firestore. Se creará al guardar.");
+        }
+    } catch(e) {
+        console.error("Error cargando desde Firestore:", e);
+    }
+}
+
+// Guardar en Firestore (con debounce de 1.5s para no saturar)
+function scheduleSaveToFirestore() {
+    if (!_firestoreEnabled) return;
+    if (_saveTimer) clearTimeout(_saveTimer);
+    _saveTimer = setTimeout(saveToFirestore, 1500);
+}
+
+async function saveToFirestore() {
+    if (!_firestoreEnabled) return;
+    try {
+        const { setDoc } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+        const profile = (() => { try { return JSON.parse(localStorage.getItem(STORAGE.PROFILE) || '{}'); } catch(e) { return {}; }})();
+        const data = {
+            profile:        profile,
+            weekly_hours:   localStorage.getItem(STORAGE.WEEKLY_HOURS) || '0',
+            weekly_goal:    localStorage.getItem(STORAGE.WEEKLY_GOAL) || '25',
+            week_start:     localStorage.getItem(STORAGE.WEEK_START) || '',
+            total_hours:    localStorage.getItem(STORAGE.TOTAL_HOURS) || '0',
+            total_sessions: localStorage.getItem(STORAGE.TOTAL_SESSIONS) || '0',
+            today_sessions: localStorage.getItem(STORAGE.TODAY_SESSIONS) || '0',
+            last_session:   localStorage.getItem(STORAGE.LAST_SESSION_DATE) || '',
+            study_history:  (() => { try { return JSON.parse(localStorage.getItem(STORAGE.STUDY_HISTORY) || '{}'); } catch(e) { return {}; }})(),
+            streak:         localStorage.getItem(STORAGE.CURRENT_STREAK) || '0',
+            best_streak:    localStorage.getItem(STORAGE.BEST_STREAK) || '0',
+            last_study:     localStorage.getItem(STORAGE.LAST_STUDY_DATE) || '',
+            exams:          (() => { try { return JSON.parse(localStorage.getItem(STORAGE.EXAMS) || '[]'); } catch(e) { return []; }})(),
+            subjects:       (() => { try { return JSON.parse(localStorage.getItem(STORAGE.SUBJECTS) || '[]'); } catch(e) { return []; }})(),
+            tasks:          (() => { try { return JSON.parse(localStorage.getItem(STORAGE.TASKS) || '[]'); } catch(e) { return []; }})(),
+            last_updated:   new Date().toISOString()
+        };
+        await setDoc(_firestoreDoc, data, { merge: true });
+        console.log("💾 Datos sincronizados con Firestore");
+    } catch(e) {
+        console.error("Error guardando en Firestore:", e);
+    }
+}
+
+// ==================== BANNER DE USUARIO ====================
+function initUserBanner() {
+    const banner = document.getElementById('userBanner');
+    const bannerText = document.getElementById('bannerText');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    if (AUTH_MODE === 'guest') {
+        banner.style.display = 'flex';
+        bannerText.innerHTML = '👤 <strong>Modo invitado</strong> — Tus datos se guardan solo en este navegador. <a href="index.html" style="color:var(--accent);font-weight:600;">Inicia sesión con Google</a> para sincronizarlos en la nube.';
+        logoutBtn.style.display = 'none';
+    } else if (AUTH_MODE === 'google' && FIREBASE_USER) {
+        banner.style.display = 'none'; // Sin banner en modo Google (está logueado)
+        logoutBtn.style.display = 'flex';
+        logoutBtn.textContent = '🚪 Cerrar sesión';
+        // Actualizar nombre y avatar con datos de Google
+        const profile = getProfile();
+        if (profile.name === 'Estudiante' && FIREBASE_USER.name) {
+            // Primera vez: prerellenar perfil con datos de Google
+            saveProfile({
+                name: FIREBASE_USER.name,
+                email: FIREBASE_USER.email,
+                university: '',
+                career: '',
+                initials: getInitials(FIREBASE_USER.name)
+            });
+        }
+    }
+
+    logoutBtn.addEventListener('click', async () => {
+        if (AUTH_MODE === 'google') {
+            try {
+                const { getAuth, signOut } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+                // Firebase config ya inicializado
+                await signOut(getAuth());
+            } catch(e) { console.log('signOut error', e); }
+        }
+        localStorage.removeItem('learnit_auth_mode');
+        localStorage.removeItem('learnit_firebase_user');
+        window.location.href = 'index.html';
+    });
+}
+
+function showBanner(message, type = 'info') {
+    const banner = document.getElementById('userBanner');
+    const bannerText = document.getElementById('bannerText');
+    banner.style.display = 'flex';
+    banner.className = 'user-banner ' + type;
+    bannerText.innerHTML = message;
+}
+
+
 // ==================== STORAGE KEYS ====================
 const STORAGE = {
     THEME: 'learnit_theme',
@@ -1969,6 +2230,7 @@ function getProfile() {
 
 function saveProfile(profile) {
     localStorage.setItem(STORAGE.PROFILE, JSON.stringify(profile));
+    scheduleSaveToFirestore();
 }
 
 function getWeeklyHours() {
@@ -2036,6 +2298,7 @@ function addStudySession(hours) {
     const today = new Date().toISOString().split('T')[0];
     history[today] = (history[today] || 0) + hours;
     localStorage.setItem(STORAGE.STUDY_HISTORY, JSON.stringify(history));
+    scheduleSaveToFirestore();
 }
 
 function calculateStreak() {
@@ -2082,6 +2345,7 @@ function getExams() {
 
 function saveExams(exams) {
     localStorage.setItem(STORAGE.EXAMS, JSON.stringify(exams));
+    scheduleSaveToFirestore();
 }
 
 function getSubjects() {
@@ -2091,6 +2355,7 @@ function getSubjects() {
 
 function saveSubjects(subjects) {
     localStorage.setItem(STORAGE.SUBJECTS, JSON.stringify(subjects));
+    scheduleSaveToFirestore();
 }
 
 function getTasks() {
@@ -2100,6 +2365,7 @@ function getTasks() {
 
 function saveTasks(tasks) {
     localStorage.setItem(STORAGE.TASKS, JSON.stringify(tasks));
+    scheduleSaveToFirestore();
 }
 
 // ==================== UI UPDATES ====================
@@ -2534,6 +2800,12 @@ document.getElementById('cancelResetBtn').addEventListener('click', () => closeM
 document.getElementById('confirmResetBtn').addEventListener('click', () => {
     // Clear all localStorage
     Object.values(STORAGE).forEach(key => localStorage.removeItem(key));
+    // También borrar en Firestore si está activo
+    if (_firestoreEnabled) {
+        import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(({deleteDoc}) => {
+            deleteDoc(_firestoreDoc).catch(e => console.log('Could not delete Firestore doc', e));
+        });
+    }
     
     closeModal('resetModal');
     showToast('Datos restaurados de fábrica. Recargando...');
@@ -2888,7 +3160,12 @@ window.addEventListener('beforeunload', (e) => {
 });
 
 // ==================== INITIALIZATION ====================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Inicializar Firebase si el usuario está logueado con Google
+    await initFirestore();
+    // Banner de modo (invitado/Google) y botón de logout
+    initUserBanner();
+    // Recargar UI con datos actualizados (si vinieron de Firestore)
     loadTheme();
     loadSidebarState();
     loadProfileData();
@@ -2907,6 +3184,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateDateDisplay, 60000);
     setInterval(updateExamCountdown, 3600000);
 });
+
 </script>
 </body>
 </html>

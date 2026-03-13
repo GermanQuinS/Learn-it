@@ -398,6 +398,10 @@
                 <span class="nav-icon">👥</span> Gestión de usuarios
             </div>
             <div class="nav-section-label">Sistema</div>
+            <div class="nav-item" data-section="bugs">
+                <span class="nav-icon">🐛</span> Bugs
+                <span id="bugNavBadge" style="background:var(--danger);color:#fff;border-radius:10px;font-size:0.65rem;font-weight:700;padding:0.1rem 0.4rem;margin-left:auto;display:none">0</span>
+            </div>
             <div class="nav-item" data-section="settings">
                 <span class="nav-icon">⚙️</span> Configuración
             </div>
@@ -536,6 +540,23 @@
                 </div>
             </div>
 
+            <!-- ===== BUGS ===== -->
+            <div class="section" id="section-bugs">
+                <div class="section-title">🐛 Reportes de bugs</div>
+                <div class="section-desc">Bugs enviados por los usuarios en tiempo real</div>
+                <div class="card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem">
+                        <div class="card-title" style="margin:0">Bugs recibidos</div>
+                        <div style="display:flex;gap:0.5rem">
+                            <button class="btn btn-sm" id="bfAll" onclick="setBugFilter('all')" style="background:rgba(108,99,255,0.2);color:var(--accent);border:1px solid rgba(108,99,255,0.3)">Todos</button>
+                            <button class="btn btn-sm" id="bfPend" onclick="setBugFilter('pendiente')" style="background:none;color:var(--text-muted);border:1px solid var(--border)">Pendientes</button>
+                            <button class="btn btn-sm" id="bfRes" onclick="setBugFilter('resuelto')" style="background:none;color:var(--text-muted);border:1px solid var(--border)">Resueltos</button>
+                        </div>
+                    </div>
+                    <div id="bugsList"><div class="empty-state"><div class="empty-state-icon">⏳</div>Cargando Firebase...</div></div>
+                </div>
+            </div>
+
             <!-- ===== SETTINGS ===== -->
             <div class="section" id="section-settings">
                 <div class="section-title">⚙️ Configuración del sistema</div>
@@ -574,7 +595,25 @@
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
 
-    <script>
+    <!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, serverTimestamp, getDocs }
+    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+const _app = initializeApp({apiKey:'AIzaSyAsB4wXWkCFDuA2trB70ANwZJfp4ZZI9Kw',authDomain:'learn-it-8cece.firebaseapp.com',projectId:'learn-it-8cece',storageBucket:'learn-it-8cece.firebasestorage.app',messagingSenderId:'209541542824',appId:'1:209541542824:web:6abd2d7bedf64d5fbd639d'});
+const _db = getFirestore(_app);
+window._db = _db;
+window._fc = {collection,addDoc,onSnapshot,query,orderBy,doc,updateDoc,deleteDoc,serverTimestamp,getDocs};
+onSnapshot(query(collection(_db,'notifications'),orderBy('date','desc')),function(snap){
+    window._notifs=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    if(window._onNotifs)window._onNotifs();
+});
+onSnapshot(query(collection(_db,'bugs'),orderBy('date','desc')),function(snap){
+    window._bugs=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    if(window._onBugs)window._onBugs();
+});
+</script>
+<script>
         // ===== AUTH CHECK =====
         if (!sessionStorage.getItem('learnit_admin')) {
             window.location.href = 'index.html';
@@ -590,17 +629,10 @@
         const ADMIN_PWD_KEY = 'learnit_admin_pwd';
 
         function getAdminPassword() {
-            return localStorage.getItem(ADMIN_PWD_KEY) || 'learnit-admin-2024';
+            return localStorage.getItem(ADMIN_PWD_KEY) || '2112';
         }
 
-        function getNotifications() {
-            try { return JSON.parse(localStorage.getItem(NOTIF_KEY) || '[]'); }
-            catch(e) { return []; }
-        }
-
-        function saveNotifications(notifs) {
-            localStorage.setItem(NOTIF_KEY, JSON.stringify(notifs));
-        }
+        function getNotifications() { return window._notifs || []; }
 
         // ===== TOAST =====
         function showToast(msg, type = 'success') {
@@ -640,7 +672,7 @@
 
         // ===== OVERVIEW =====
         function renderOverview() {
-            const notifs = getNotifications();
+            const notifs = window._notifs || [];
             const userRaw = localStorage.getItem('learnit_firebase_user');
             const user = userRaw ? JSON.parse(userRaw) : null;
 
@@ -692,7 +724,7 @@
             document.getElementById('ntype-' + t).classList.add('active');
         }
 
-        function sendFullNotif() {
+        async function sendFullNotif() {
             const message = document.getElementById('notifMessage').value.trim();
             const title = document.getElementById('notifTitle').value.trim();
             if (!message) { showToast('El mensaje no puede estar vacío', 'error'); return; }
@@ -708,7 +740,7 @@
                 sentBy: 'admin'
             };
 
-            addNotification(notif);
+            await addNotification(notif);
             const fb = document.getElementById('notifSentFeedback');
             fb.style.display = 'block';
             fb.textContent = `✅ Notificación enviada correctamente a ${selectedTarget === 'all' ? 'todos los usuarios' : 'usuario específico'}`;
@@ -716,7 +748,7 @@
             showToast('Notificación enviada');
         }
 
-        function sendQuickNotif() {
+        async function sendQuickNotif() {
             const message = document.getElementById('quickNotifInput').value.trim();
             const type = document.getElementById('quickNotifType').value;
             if (!message) { showToast('Escribe un mensaje', 'error'); return; }
@@ -726,7 +758,7 @@
             showToast('Notificación enviada');
         }
 
-        function sendTargetedNotif() {
+        async function sendTargetedNotif() {
             const uid = document.getElementById('targetUidInput').value.trim();
             const message = document.getElementById('targetNotifMsg').value.trim();
             const type = document.getElementById('targetNotifType').value;
@@ -738,10 +770,9 @@
             showToast('Notificación enviada al usuario');
         }
 
-        function addNotification(notif) {
-            const notifs = getNotifications();
-            notifs.unshift(notif);
-            saveNotifications(notifs);
+        async function addNotification(notif) {
+            if(!window._db){showToast('Firebase no listo','error');return;}
+            await window._fc.addDoc(window._fc.collection(window._db,'notifications'),{message:notif.message,type:notif.type,date:window._fc.serverTimestamp()});
         }
 
         function clearNotifForm() {
@@ -749,18 +780,16 @@
             document.getElementById('notifTitle').value = '';
         }
 
-        function clearAllNotifs() {
-            if (!confirm('¿Borrar todas las notificaciones? Esta acción es irreversible.')) return;
-            localStorage.removeItem(NOTIF_KEY);
-            localStorage.removeItem(NOTIF_READ_KEY);
-            renderNotifLog();
-            renderOverview();
+        async function clearAllNotifs() {
+            if(!confirm('¿Borrar todas las notificaciones?'))return;
+            var snap=await window._fc.getDocs(window._fc.collection(window._db,'notifications'));
+            await Promise.all(snap.docs.map(function(d){return window._fc.deleteDoc(d.ref)}));
             showToast('Notificaciones eliminadas');
         }
 
         // ===== NOTIF LOG =====
         function renderNotifLog() {
-            const notifs = getNotifications();
+            const notifs = window._notifs || [];
             const container = document.getElementById('notifLogContent');
             if (notifs.length === 0) {
                 container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div>Sin notificaciones en el historial</div>`;
@@ -792,11 +821,8 @@
             `;
         }
 
-        function deleteNotif(id) {
-            const notifs = getNotifications().filter(n => n.id !== id);
-            saveNotifications(notifs);
-            renderNotifLog();
-            renderOverview();
+        async function deleteNotif(id) {
+            await window._fc.deleteDoc(window._fc.doc(window._db,'notifications',id));
             showToast('Notificación eliminada');
         }
 
@@ -900,8 +926,64 @@
                    d.toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
         }
 
+
+        // ===== BUGS (Firebase) =====
+        var _bugFilter='all';
+        function setBugFilter(f){
+            _bugFilter=f;
+            var map={all:'bfAll',pendiente:'bfPend',resuelto:'bfRes'};
+            ['all','pendiente','resuelto'].forEach(function(v){
+                var btn=document.getElementById(map[v]);
+                if(!btn)return;
+                if(v===f){btn.style.background='rgba(108,99,255,0.2)';btn.style.color='var(--accent)';btn.style.borderColor='rgba(108,99,255,0.3)';}
+                else{btn.style.background='none';btn.style.color='var(--text-muted)';btn.style.borderColor='var(--border)';}
+            });
+            renderBugs();
+        }
+        function renderBugs(){
+            var all=window._bugs||[];
+            var bugs=_bugFilter==='all'?all:all.filter(function(b){return b.status===_bugFilter;});
+            var c=document.getElementById('bugsList');
+            if(!c)return;
+            var badge=document.getElementById('bugNavBadge');
+            var pend=all.filter(function(b){return b.status==='pendiente';}).length;
+            if(badge){badge.textContent=pend;badge.style.display=pend>0?'inline':'none';}
+            if(!bugs.length){
+                c.innerHTML='<div class="empty-state"><div class="empty-state-icon">'+(all.length?'🔍':'🎉')+'</div>'+(all.length?'Sin bugs con este filtro':'No hay bugs aún')+'</div>';
+                return;
+            }
+            c.innerHTML=bugs.map(function(bug){
+                var d=bug.date&&bug.date.toDate?bug.date.toDate().toLocaleString('es-ES'):'—';
+                var ip=bug.status==='pendiente';
+                var h='<div style="padding:1rem;border-bottom:1px solid var(--border)">';
+                h+='<div style="display:flex;gap:1rem;align-items:flex-start">';
+                h+='<div style="flex:1">';
+                h+='<div style="display:flex;gap:0.5rem;margin-bottom:0.4rem">';
+                var bgc=ip?'rgba(255,107,157,0.2)':'rgba(78,205,196,0.2)';
+                var fgc=ip?'var(--danger)':'var(--success)';
+                h+='<span style="background:'+bgc+';color:'+fgc+';padding:0.1rem 0.5rem;border-radius:5px;font-size:0.7rem;font-weight:700">'+bug.status.toUpperCase()+'</span>';
+                h+='<span style="font-size:0.75rem;color:var(--text-muted)">'+d+'</span></div>';
+                h+='<div style="font-size:0.9rem;line-height:1.5">'+bug.description+'</div>';
+                if(bug.reply)h+='<div style="margin-top:0.4rem;background:rgba(108,99,255,0.08);border-left:3px solid var(--accent);padding:0.4rem 0.7rem;border-radius:0 6px 6px 0;font-size:0.82rem">💬 '+bug.reply+'</div>';
+                h+='</div>';
+                h+='<div style="display:flex;flex-direction:column;gap:0.4rem">';
+                var bid=bug.id;
+                if(ip)h+='<button onclick="adminResolveBug(&quot;'+bid+'&quot;)" style="background:rgba(78,205,196,0.15);border:1px solid rgba(78,205,196,0.3);color:var(--success);border-radius:7px;padding:0.35rem 0.7rem;cursor:pointer;font-size:0.78rem">✓</button>';
+                h+='<button onclick="adminReplyBug(&quot;'+bid+'&quot;)" style="background:rgba(108,99,255,0.12);border:1px solid rgba(108,99,255,0.25);color:var(--accent);border-radius:7px;padding:0.35rem 0.7rem;cursor:pointer;font-size:0.78rem">💬</button>';
+                h+='<button onclick="adminDeleteBug(&quot;'+bid+'&quot;)" style="background:rgba(255,107,157,0.1);border:1px solid rgba(255,107,157,0.2);color:var(--danger);border-radius:7px;padding:0.35rem 0.7rem;cursor:pointer;font-size:0.78rem">🗑️</button>';
+                h+='</div></div></div>';
+                return h;
+            }).join('');
+        }
+        window._onBugs=renderBugs;
+        window._onNotifs=function(){renderOverview();renderNotifLog();};
+        async function adminResolveBug(id){await window._fc.updateDoc(window._fc.doc(window._db,'bugs',id),{status:'resuelto'});showToast('Resuelto ✓');}
+        async function adminReplyBug(id){var r=prompt('Respuesta al usuario:');if(r===null)return;await window._fc.updateDoc(window._fc.doc(window._db,'bugs',id),{reply:r});showToast('Guardado ✓');}
+        async function adminDeleteBug(id){if(!confirm('¿Eliminar?'))return;await window._fc.deleteDoc(window._fc.doc(window._db,'bugs',id));showToast('Eliminado');}
+
         // ===== INIT =====
         renderOverview();
+
     </script>
 </body>
 </html>

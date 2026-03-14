@@ -240,6 +240,54 @@
         }
         .support-btn:hover { box-shadow: 0 6px 25px rgba(108, 99, 255, 0.6); }
         .support-btn.dragging { cursor: grabbing !important; transform: scale(1.05); box-shadow: 0 8px 30px rgba(108, 99, 255, 0.7); }
+        /* ===== FEATURES PREVIEW ===== */
+        .features-preview {
+            padding: 2rem 2rem 3rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .features-tagline {
+            text-align: center;
+            font-size: 1rem;
+            opacity: 0.7;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+        }
+        .feature-card {
+            padding: 1.4rem;
+            border-radius: 16px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        body.dark-mode .feature-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+        }
+        body.light-mode .feature-card {
+            background: rgba(108,99,255,0.05);
+            border: 1px solid rgba(108,99,255,0.12);
+        }
+        .feature-card:hover { transform: translateY(-4px); }
+        .feature-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+        .feature-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--accent);
+        }
+        body.light-mode .feature-title { color: var(--accent); }
+        .feature-desc {
+            font-size: 0.82rem;
+            opacity: 0.65;
+            line-height: 1.5;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .login-wrapper { flex-direction: column; gap: 0; border-radius: 25px; }
@@ -261,6 +309,10 @@
             .illustration svg { max-width: 180px; }
             .support-btn span { display: none; }
             .support-btn { padding: 1rem; border-radius: 50%; bottom: 4rem; }
+            .features-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .features-grid { grid-template-columns: 1fr 1fr; }
         }
 
         /* ===== ADMIN MODAL ===== */
@@ -435,6 +487,29 @@
             </div>
         </div>
     </main>
+
+    <!-- Features Preview -->
+    <section class="features-preview">
+        <p class="features-tagline" data-translate="tagline">"Organiza tus estudios, sigue tu progreso, domina el contenido con flashcards"</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <div class="feature-title" data-translate="feat1Title">Pomodoro & Estadísticas</div>
+                <div class="feature-desc" data-translate="feat1Desc">Temporizador inteligente, racha de días y seguimiento de horas semanales con objetivos.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🃏</div>
+                <div class="feature-title" data-translate="feat2Title">Flashcards con SM-2</div>
+                <div class="feature-desc" data-translate="feat2Desc">Algoritmo de repetición espaciada (como Anki) para memorizar más con menos tiempo.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <div class="feature-title" data-translate="feat3Title">Agenda Completa</div>
+                <div class="feature-desc" data-translate="feat3Desc">Gestiona materias, tareas con prioridades y cuenta atrás para tus próximos exámenes.</div>
+            </div>
+        </div>
+    </section>
+
     <footer>
         <p class="description" data-translate="description">
             Learn it is a platform that allows you to structure your studies and learning online in a simple way
@@ -459,7 +534,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 continueGuest: "Continue as a guest",
                 adminLogin: "Login as administrator",
                 description: "Learn it is a platform that allows you to structure your studies and learning online in a simple way",
-                support: "Support"
+                support: "Support",
+                tagline: '"Organize your studies, track your progress, master content with flashcards"',
+                feat1Title: "Pomodoro & Statistics",
+                feat1Desc: "Smart timer, day streaks and weekly hour tracking with personal goals.",
+                feat2Title: "Flashcards with SM-2",
+                feat2Desc: "Spaced repetition algorithm (like Anki) to memorize more in less time.",
+                feat3Title: "Full Planner",
+                feat3Desc: "Manage subjects, priority tasks and countdowns to your next exams."
             },
             es: {
                 subtitle: "Tu plataforma de aprendizaje",
@@ -468,7 +550,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 continueGuest: "Continuar como invitado",
                 adminLogin: "Iniciar sesión como administrador",
                 description: "Learn it es una plataforma que te permite estructurar tus estudios y aprendizaje online de forma sencilla",
-                support: "Soporte"
+                support: "Soporte",
+                tagline: '"Organiza tus estudios, sigue tu progreso, domina el contenido con flashcards"',
+                feat1Title: "Pomodoro & Estadísticas",
+                feat1Desc: "Temporizador inteligente, racha de días y seguimiento de horas semanales con objetivos.",
+                feat2Title: "Flashcards con SM-2",
+                feat2Desc: "Algoritmo de repetición espaciada (como Anki) para memorizar más con menos tiempo.",
+                feat3Title: "Agenda Completa",
+                feat3Desc: "Gestiona materias, tareas con prioridades y cuenta atrás para tus próximos exámenes."
             },
             gl: {
                 subtitle: "A túa plataforma de aprendizaxe",
@@ -477,7 +566,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 continueGuest: "Continuar como convidado",
                 adminLogin: "Acceder como administrador",
                 description: "Learn it é unha plataforma que che permite estruturar os teus estudos e aprendizaxe en liña de xeito sinxelo",
-                support: "Soporte"
+                support: "Soporte",
+                tagline: '"Organiza os teus estudos, segue o teu progreso, domina o contido con flashcards"',
+                feat1Title: "Pomodoro & Estatísticas",
+                feat1Desc: "Temporizador intelixente, racha de días e seguimento de horas semanais con obxectivos.",
+                feat2Title: "Flashcards con SM-2",
+                feat2Desc: "Algoritmo de repetición espaciada (coma Anki) para memorizar máis en menos tempo.",
+                feat3Title: "Axenda Completa",
+                feat3Desc: "Xestiona materias, tarefas con prioridades e conta atrás para os teus próximos exames."
             },
             fr: {
                 subtitle: "Votre plateforme d'apprentissage",
@@ -486,7 +582,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 continueGuest: "Continuer en tant qu'invité",
                 adminLogin: "Connexion administrateur",
                 description: "Learn it est une plateforme qui vous permet de structurer vos études et votre apprentissage en ligne de manière simple",
-                support: "Support"
+                support: "Support",
+                tagline: '"Organisez vos études, suivez vos progrès, maîtrisez le contenu avec des flashcards"',
+                feat1Title: "Pomodoro & Statistiques",
+                feat1Desc: "Minuteur intelligent, série de jours et suivi des heures hebdomadaires avec objectifs.",
+                feat2Title: "Flashcards avec SM-2",
+                feat2Desc: "Algorithme de répétition espacée (comme Anki) pour mémoriser plus en moins de temps.",
+                feat3Title: "Agenda Complet",
+                feat3Desc: "Gérez les matières, les tâches prioritaires et les comptes à rebours avant vos examens."
             },
             de: {
                 subtitle: "Ihre Lernplattform",
@@ -495,7 +598,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 continueGuest: "Als Gast fortfahren",
                 adminLogin: "Administrator-Login",
                 description: "Learn it ist eine Plattform, mit der Sie Ihr Studium und Online-Lernen auf einfache Weise strukturieren können",
-                support: "Unterstützung"
+                support: "Unterstützung",
+                tagline: '"Organisiere dein Studium, verfolge deinen Fortschritt, meistere Inhalte mit Lernkarten"',
+                feat1Title: "Pomodoro & Statistiken",
+                feat1Desc: "Smarter Timer, Tagessträhnen und wöchentliche Stundenverfolgung mit Zielen.",
+                feat2Title: "Lernkarten mit SM-2",
+                feat2Desc: "Spaced-Repetition-Algorithmus (wie Anki) für effizienteres Lernen.",
+                feat3Title: "Vollständiger Planer",
+                feat3Desc: "Verwalte Fächer, Aufgaben mit Prioritäten und Countdowns zu Prüfungen."
             }
         };
 

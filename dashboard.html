@@ -4464,9 +4464,15 @@ ${text.slice(0, 8000)}`;
         });
 
         const data = await response.json();
-        if (data.error) throw new Error(data.error.message || 'Error de Gemini API');
+        if (data.error) throw new Error(data.error || 'Error desconocido del servidor IA');
 
         const rawText = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text) || '';
+        
+        if (!rawText) {
+            // Mostrar respuesta completa para debug
+            throw new Error('Sin respuesta de IA. Detalle: ' + JSON.stringify(data).slice(0, 200));
+        }
+        
         document.getElementById('aiStatusText').textContent = 'Procesando tarjetas...';
 
         let parsed;
